@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# note: expected to be called by composer which adds vendor/bin to the path
+
+phpcs --standard=./contrib/phpcs-ruleset.xml --ignore=./tests/.coverage/*
+if [ $? != 0 ]
+then
+    cat <<EOF
+phpcs failed. use `composer run cs-fix` to fix the errors.
+
+EOF
+    exit 1
+fi

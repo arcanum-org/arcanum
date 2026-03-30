@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# note: expected to be called by composer which adds vendor/bin to the path
+
+#
+# Run PHPStan on entire project not just changed files
+# @see https://phpstan.org/blog/why-you-should-always-analyse-whole-project
+#
+phpstan --memory-limit=512M analyze -c contrib/phpstan.neon -v
+if [ $? != 0 ]
+then
+        cat <<EOF
+phpstan failed.
+
+EOF
+    exit 1
+fi
