@@ -51,8 +51,9 @@ return [
      * PAGES NAMESPACE
      * ---------------
      *
-     * The namespace for explicitly registered page routes. Pages bypass
-     * convention-based routing and live under this namespace directly.
+     * The namespace for auto-discovered page routes. Pages are scanned
+     * from the pages directory (default: app/Pages) and registered as
+     * GET-only routes. Creating a class in this namespace registers the route.
      */
     'pages_namespace' => 'App\\Pages',
 ];

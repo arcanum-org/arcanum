@@ -35,10 +35,24 @@ $container->service(Kernel::class, WebKernel::class);
 /**
  * Specify the WebKernel's primitive constructor arguments
  */
+$rootDirectory = $_ENV['APP_ROOT_DIR'] ?? realpath(__DIR__ . '/..');
+
 $container->specify(
     when: WebKernel::class,
     needs: '$rootDirectory',
-    give: $_ENV['APP_ROOT_DIR'] ?? realpath(__DIR__ . '/..')
+    give: $rootDirectory
+);
+
+$container->specify(
+    when: WebKernel::class,
+    needs: '$configDirectory',
+    give: $rootDirectory . '/config'
+);
+
+$container->specify(
+    when: WebKernel::class,
+    needs: '$filesDirectory',
+    give: $rootDirectory . '/files'
 );
 
 /**
