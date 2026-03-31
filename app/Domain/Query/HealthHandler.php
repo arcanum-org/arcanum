@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Query;
+namespace App\Domain\Query;
 
 final class HealthHandler
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Contact\Command;
+namespace App\Domain\Contact\Command;
 
 use Psr\Log\LoggerInterface;
 

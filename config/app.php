@@ -45,7 +45,7 @@ return [
      * The root namespace for your application. This must match your
      * Composer autoload PSR-4 mapping (e.g., "App" maps to "app/").
      */
-    'namespace' => 'App',
+    'namespace' => 'App\\Domain',
 
     /**
      * PAGES NAMESPACE
@@ -54,5 +54,5 @@ return [
      * The namespace for explicitly registered page routes. Pages bypass
      * convention-based routing and live under this namespace directly.
      */
-    'pages_namespace' => 'App\\Pages',
+    'pages_namespace' => 'App\\Domain\\Pages',
 ];
