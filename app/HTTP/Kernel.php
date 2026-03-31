@@ -7,7 +7,9 @@ namespace App\Http;
 use Arcanum\Atlas\Router;
 use Arcanum\Codex\Hydrator;
 use Arcanum\Flow\Conveyor\Bus;
+use Arcanum\Flow\Conveyor\Command;
 use Arcanum\Flow\Conveyor\EmptyDTO;
+use Arcanum\Flow\Conveyor\Query;
 use Arcanum\Hyper\StatusCode;
 use Arcanum\Ignition\HyperKernel;
 use Arcanum\Shodo\EmptyResponseRenderer;
@@ -44,9 +46,18 @@ final class Kernel extends HyperKernel
             $data = (array) ($request->getParsedBody() ?? []);
         }
 
-        /** @var class-string<object> $dtoClass */
-        $dtoClass = $route->dtoClass;
-        $dto = $hydrator->hydrate($dtoClass, $data);
+        // If an explicit DTO class exists, hydrate it. Otherwise, create a
+        // dynamic Command or Query — this allows handler-only routes where
+        // the developer defines only the handler without a paired DTO class.
+        if (class_exists($route->dtoClass)) {
+            /** @var class-string<object> $dtoClass */
+            $dtoClass = $route->dtoClass;
+            $dto = $hydrator->hydrate($dtoClass, $data);
+        } elseif ($route->isCommand()) {
+            $dto = new Command($route->dtoClass, $data);
+        } else {
+            $dto = new Query($route->dtoClass, $data);
+        }
 
         // Dispatch through Conveyor — handler returns result
         $result = $bus->dispatch($dto, prefix: $route->handlerPrefix);
