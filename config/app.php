@@ -54,5 +54,5 @@ return [
      * The namespace for explicitly registered page routes. Pages bypass
      * convention-based routing and live under this namespace directly.
      */
-    'pages_namespace' => 'App\\Domain\\Pages',
+    'pages_namespace' => 'App\\Pages',
 ];
