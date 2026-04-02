@@ -27,6 +27,25 @@ return [
     ],
 
     /**
+     * CLI ROUTE ALIASES
+     * -----------------
+     *
+     * Custom CLI command names that bypass convention-based resolution.
+     * Each entry maps a CLI command name to a DTO class with a CQRS type.
+     *
+     * 'name' => [
+     *     'class' => 'App\Domain\Namespace\Command\ClassName',
+     *     'type'  => 'command',    // optional, defaults to 'command'
+     * ],
+     */
+    'cli' => [
+        // 'stripe:webhook' => [
+        //     'class' => 'App\Integration\Stripe\ProcessWebhook',
+        //     'type' => 'command',
+        // ],
+    ],
+
+    /**
      * PAGE FORMAT OVERRIDES
      * ---------------------
      *

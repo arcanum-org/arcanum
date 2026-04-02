@@ -25,7 +25,19 @@ return [
     'formats' => [
         'json' => [
             'content_type' => 'application/json',
-            'renderer' => \Arcanum\Shodo\JsonRenderer::class,
+            'renderer' => \Arcanum\Hyper\JsonResponseRenderer::class,
+        ],
+        'html' => [
+            'content_type' => 'text/html',
+            'renderer' => \Arcanum\Hyper\HtmlResponseRenderer::class,
+        ],
+        'csv' => [
+            'content_type' => 'text/csv',
+            'renderer' => \Arcanum\Hyper\CsvResponseRenderer::class,
+        ],
+        'txt' => [
+            'content_type' => 'text/plain',
+            'renderer' => \Arcanum\Hyper\PlainTextResponseRenderer::class,
         ],
     ],
 

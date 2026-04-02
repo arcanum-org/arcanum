@@ -1,0 +1,52 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Arcanum CLI Entry Point
+ *
+ * This is your application's entry point for CLI commands. It bootstraps
+ * the application, creates the CLI kernel, and dispatches the command.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Define The Application Start Time
+ */
+\define('ARCANUM_START', \microtime(true));
+
+/**
+ * Register The Auto Loader
+ */
+require __DIR__ . '/../vendor/autoload.php';
+
+/**
+ * Bootstrap The Application Container
+ */
+$container = require_once __DIR__ . '/../bootstrap/cli.php';
+
+/**
+ * Get The Application's CLI Kernel
+ *
+ * @var \App\Cli\Kernel $kernel
+ */
+$kernel = $container->get(\Arcanum\Ignition\Kernel::class);
+
+/**
+ * Bootstrap the Kernel
+ */
+$kernel->bootstrap($container);
+
+/**
+ * Handle the CLI command and exit with the returned code.
+ *
+ * This is the primary entrypoint into your application from the CLI.
+ */
+$exitCode = $kernel->handle($argv);
+
+/**
+ * Terminate the application
+ */
+$kernel->terminate();
+
+exit($exitCode);

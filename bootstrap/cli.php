@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 use Arcanum\Cabinet\Container;
 use Arcanum\Ignition\Kernel;
-use Arcanum\Hyper\Server;
-use Arcanum\Hyper\PHPServerAdapter;
-use App\Http\Kernel as WebKernel;
+use App\Cli\Kernel as CliKernel;
 
 /**
  * Create The Application Container
@@ -20,56 +18,31 @@ $container->instance(\Arcanum\Cabinet\Application::class, $container);
 $container->instance(\Psr\Container\ContainerInterface::class, $container);
 
 /**
- * Register Hyper Server with a standard PHPServerAdapter
- *
- * The Hyper Server is responsible for generating request objects for
- * the Kernel and sending responses from the Kernel to the client.
+ * Register the application's CLI Kernel
  */
-$container->serviceWith(Server::class, [PHPServerAdapter::class]);
+$container->service(Kernel::class, CliKernel::class);
 
 /**
- * Register the application's HTTP Kernel
- */
-$container->service(Kernel::class, WebKernel::class);
-
-/**
- * Specify the WebKernel's primitive constructor arguments
+ * Specify the CliKernel's primitive constructor arguments
  */
 $rootDirectory = $_ENV['APP_ROOT_DIR'] ?? realpath(__DIR__ . '/..');
 
 $container->specify(
-    when: WebKernel::class,
+    when: CliKernel::class,
     needs: '$rootDirectory',
     give: $rootDirectory
 );
 
 $container->specify(
-    when: WebKernel::class,
+    when: CliKernel::class,
     needs: '$configDirectory',
     give: $rootDirectory . '/config'
 );
 
 $container->specify(
-    when: WebKernel::class,
+    when: CliKernel::class,
     needs: '$filesDirectory',
     give: $rootDirectory . '/files'
-);
-
-/**
- * Register the Exception Renderer
- *
- * Hyper's JsonExceptionResponseRenderer converts exceptions into JSON responses.
- * Debug mode is controlled by the APP_DEBUG environment variable.
- */
-$container->service(
-    \Arcanum\Glitch\ExceptionRenderer::class,
-    \Arcanum\Hyper\JsonExceptionResponseRenderer::class,
-);
-
-$container->specify(
-    when: \Arcanum\Hyper\JsonExceptionResponseRenderer::class,
-    needs: '$debug',
-    give: ($_ENV['APP_DEBUG'] ?? 'false') === 'true',
 );
 
 /**
@@ -99,15 +72,11 @@ $container->specify(
 );
 
 /**
- * Register the EmptyResponseRenderer (used by the kernel for Commands)
- */
-$container->service(\Arcanum\Hyper\EmptyResponseRenderer::class);
-
-/**
  * Return the configured container
  *
- * Atlas routing, FormatRegistry, Hydrator, and JsonRenderer are registered
- * automatically by the Routing bootstrapper (Ignition\Bootstrap\Routing)
- * from config/routes.php and config/formats.php.
+ * CliRouter, Hydrator, ConsoleOutput, CliFormatRegistry, CliExceptionWriter,
+ * and built-in commands (list, help, validate:handlers) are registered
+ * automatically by the CliRouting bootstrapper (Ignition\Bootstrap\CliRouting)
+ * from config/app.php and config/routes.php.
  */
 return $container;
