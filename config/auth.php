@@ -17,7 +17,7 @@ return [
 
         // Token guard: maps bearer token → Identity
         // For smoke testing: "admin-token" resolves to an admin user.
-        'token' => fn(string $token) => match ($token) {
+        'token' => fn(string $token) => match (trim($token)) {
             'admin-token' => new SimpleIdentity('admin-1', ['admin']),
             'user-token' => new SimpleIdentity('user-1', ['user']),
             default => null,
