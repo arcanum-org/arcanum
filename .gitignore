@@ -3,4 +3,8 @@
 
 /vendor/
 /tests/.phpunit.cache
+/files/cache/*
+!/files/cache/.gitkeep
+/files/sessions/*
+!/files/sessions/.gitkeep
 /files/*.sqlite
