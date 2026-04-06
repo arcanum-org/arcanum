@@ -83,6 +83,28 @@ $container->specify(
 );
 
 /**
+ * Register the HTML Exception Renderer
+ *
+ * Used for .html endpoints — the kernel picks the right renderer
+ * based on the URL extension.
+ */
+$container->service(\Arcanum\Hyper\HtmlExceptionResponseRenderer::class);
+
+$container->specify(
+    when: \Arcanum\Hyper\HtmlExceptionResponseRenderer::class,
+    needs: '$debug',
+    give: $isDebug,
+);
+
+$container->specify(
+    when: \Arcanum\Hyper\HtmlExceptionResponseRenderer::class,
+    needs: '$verboseErrors',
+    give: ($_ENV['APP_VERBOSE_ERRORS'] ?? null) !== null
+        ? ($_ENV['APP_VERBOSE_ERRORS'] === 'true')
+        : $isDebug,
+);
+
+/**
  * Register the Application's Error Handler
  */
 $container->service(\Arcanum\Glitch\ErrorHandler::class, \App\Error\Handler::class);
