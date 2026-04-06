@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http;
 
+use Arcanum\Atlas\LocationResolver;
 use Arcanum\Atlas\Router;
 use Arcanum\Codex\Hydrator;
 use Arcanum\Flow\Conveyor\AcceptedDTO;
@@ -91,7 +92,9 @@ final class Kernel extends HyperKernel
         // middleware around the bus dispatch.
         $result = $dispatcher->dispatch($dto, $route);
 
-        // Commands return status-code-only responses (no body)
+        // Commands return status-code-only responses (no body).
+        // When a handler returns a Query DTO (201 Created), the framework
+        // adds a Location header pointing to where the resource can be read.
         if ($route->isCommand()) {
             /** @var EmptyResponseRenderer $emptyRenderer */
             $emptyRenderer = $this->container->get(EmptyResponseRenderer::class);
@@ -100,7 +103,18 @@ final class Kernel extends HyperKernel
                 $result instanceof AcceptedDTO => StatusCode::Accepted,
                 default => StatusCode::Created,
             };
-            return $emptyRenderer->render($status);
+            $response = $emptyRenderer->render($status);
+
+            if ($status === StatusCode::Created && $this->container->has(LocationResolver::class)) {
+                /** @var LocationResolver $locationResolver */
+                $locationResolver = $this->container->get(LocationResolver::class);
+                $location = $locationResolver->resolve($result);
+                if ($location !== null) {
+                    $response = $response->withHeader('Location', $location);
+                }
+            }
+
+            return $response;
         }
 
         // Unwrap QueryResult if the handler returned a non-object value

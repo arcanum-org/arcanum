@@ -3,3 +3,4 @@
 
 /vendor/
 /tests/.phpunit.cache
+/files/*.sqlite
