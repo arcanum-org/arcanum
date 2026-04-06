@@ -6,7 +6,7 @@ namespace App\Http\Listener;
 
 use Arcanum\Hyper\Event\RequestHandled;
 use Arcanum\Hyper\Event\RequestReceived;
-use Arcanum\Quill\Logger;
+use Arcanum\Quill\ChannelLogger;
 
 /**
  * Logs HTTP requests with method, path, status, and duration.
@@ -21,7 +21,7 @@ use Arcanum\Quill\Logger;
 final class RequestLogger
 {
     public function __construct(
-        private readonly Logger $logger,
+        private readonly ChannelLogger $logger,
     ) {
     }
 
