@@ -66,4 +66,14 @@ return [
      * GET-only routes. Creating a class in this namespace registers the route.
      */
     'pages_namespace' => 'App\\Pages',
+
+    /**
+     * TEMPLATES DIRECTORY
+     * -------------------
+     *
+     * Shared template directory for layouts and partials. Relative to the
+     * application root. Templates here are the fallback when @extends or
+     * @include can't find a file relative to the child template.
+     */
+    'templates_directory' => 'app/Templates',
 ];
