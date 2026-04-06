@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ $name }}</title>
-</head>
-<body>
-    <h1>{{ $name }}</h1>
-    <p>{{ $message }}</p>
-    <p>{{ Format::date('now') }}</p>
-    <nav>
-        <a href="{{ Route::url('App\\Domain\\Query\\Health') }}">Health Check</a>
-    </nav>
-</body>
-</html>
+{{ @extends 'layout' }}
+
+{{ @section 'title' }}{{ $name }}{{ @endsection }}
+
+{{ @section 'content' }}
+<h1>{{ $name }}</h1>
+<p>{{ $message }}</p>
+<p>{{ Format::date('now') }}</p>
+<nav>
+    <a href="{{ Route::url('App\\Domain\\Query\\Health') }}">Health Check</a>
+</nav>
+{{ @endsection }}

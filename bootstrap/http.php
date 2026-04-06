@@ -59,17 +59,27 @@ $container->specify(
  * Register the Exception Renderer
  *
  * Hyper's JsonExceptionResponseRenderer converts exceptions into JSON responses.
- * Debug mode is controlled by the APP_DEBUG environment variable.
+ * Debug mode controls stack traces; verbose_errors controls suggestion hints.
  */
 $container->service(
     \Arcanum\Glitch\ExceptionRenderer::class,
     \Arcanum\Hyper\JsonExceptionResponseRenderer::class,
 );
 
+$isDebug = ($_ENV['APP_DEBUG'] ?? 'false') === 'true';
+
 $container->specify(
     when: \Arcanum\Hyper\JsonExceptionResponseRenderer::class,
     needs: '$debug',
-    give: ($_ENV['APP_DEBUG'] ?? 'false') === 'true',
+    give: $isDebug,
+);
+
+$container->specify(
+    when: \Arcanum\Hyper\JsonExceptionResponseRenderer::class,
+    needs: '$verboseErrors',
+    give: ($_ENV['APP_VERBOSE_ERRORS'] ?? null) !== null
+        ? ($_ENV['APP_VERBOSE_ERRORS'] === 'true')
+        : $isDebug,
 );
 
 /**

@@ -201,6 +201,54 @@ public function testReturnsStatusOk(): void
 
 See `tests/Domain/Query/HealthHandlerTest.php` for a complete example.
 
+## Error Messages
+
+Arcanum exceptions implement the `ArcanumException` interface, which provides:
+
+- **`getTitle()`** — stable, human-readable error category (e.g., "Service Not Found")
+- **`getSuggestion()`** — optional fix hint shown when `app.verbose_errors` is enabled
+
+When writing your own exceptions, implement `ArcanumException` so the framework's error renderers (JSON and HTML) display titles and suggestions automatically:
+
+```php
+use Arcanum\Glitch\ArcanumException;
+
+class OrderNotFound extends \RuntimeException implements ArcanumException
+{
+    public function __construct(private readonly int $orderId)
+    {
+        parent::__construct("Order #{$this->orderId} not found");
+    }
+
+    public function getTitle(): string
+    {
+        return 'Order Not Found';
+    }
+
+    public function getSuggestion(): ?string
+    {
+        return 'Check the order ID — it may have been deleted or never existed';
+    }
+}
+```
+
+**`app.verbose_errors`** controls whether suggestions appear in responses. It defaults to `app.debug` when not set. You can enable suggestions without stack traces, or vice versa:
+
+```php
+// config/app.php
+'debug' => false,            // no stack traces
+'verbose_errors' => true,    // but show suggestions
+```
+
+For "did you mean?" suggestions, use `Strings::closestMatch()`:
+
+```php
+use Arcanum\Toolkit\Strings;
+
+$closest = Strings::closestMatch($input, $available);
+// Returns the nearest match or null if nothing is close enough
+```
+
 ## Development
 
 After `composer install`, a pre-commit hook is installed automatically via `contrib/setup`. It runs code style checks, PHPStan, tests, and handler validation on every commit.

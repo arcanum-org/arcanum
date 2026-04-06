@@ -23,6 +23,16 @@ return [
     'debug' => $_ENV['APP_DEBUG'] ?? false,
 
     /**
+     * VERBOSE ERRORS
+     * ---------------
+     *
+     * When enabled, error responses include suggestions for fixing the problem.
+     * Independent from debug mode — you might want suggestions in staging but
+     * not stack traces, or vice versa. Defaults to the debug value when not set.
+     */
+    'verbose_errors' => $_ENV['APP_VERBOSE_ERRORS'] ?? null,
+
+    /**
      * URL
      * ---
      *
