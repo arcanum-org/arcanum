@@ -105,23 +105,28 @@ app/
   Domain/           # CQRS handlers — organized by feature
     Query/          # Root-level queries (Health)
     Contact/        # Contact feature
-      Command/      # Write operations (Submit)
+      Command/      # Write operations (Submit, persists to SQLite)
+      Query/        # Read operations (Messages)
+      Model/        # Forge SQL files (Save.sql, FindAll.sql)
     Auth/           # Auth examples (Whoami, AdminOnly)
       Query/        # Read operations requiring auth
   Pages/            # Template-driven routes (Index, Contact)
+  Templates/        # Shared layouts and partials
+    layout.html     # Base layout (Tailwind, HTMX, nav, footer)
+    partials/       # Reusable fragments (nav.html, footer.html)
   Http/             # HTTP kernel and middleware
   Cli/              # CLI kernel
   Error/            # Error handler
 
 config/
-  app.php           # Environment, debug, namespace
+  app.php           # Environment, debug, namespace, templates_directory
   auth.php          # Guard type and identity resolvers
   cache.php         # Cache drivers
   cors.php          # CORS policy
-  formats.php       # Response formats (json, html, csv, txt)
+  formats.php       # Response formats and default (html)
   log.php           # Logging handlers and channels
-  middleware.php    # Global HTTP middleware
-  routes.php        # Custom route overrides and page format overrides
+  middleware.php    # Global HTTP middleware (Cors, Htmx)
+  routes.php        # Custom route overrides
 
 public/
   index.php         # HTTP entry point
@@ -248,6 +253,75 @@ use Arcanum\Toolkit\Strings;
 $closest = Strings::closestMatch($input, $available);
 // Returns the nearest match or null if nothing is close enough
 ```
+
+## Front-End: Tailwind CSS + HTMX
+
+The starter app ships with **Tailwind CSS** for styling and **HTMX** for interactivity — no build step required for development.
+
+### Development (zero-build)
+
+The base layout (`app/Templates/layout.html`) loads Tailwind via CDN play script and HTMX via CDN. Just start the server:
+
+```bash
+php -S localhost:8000 -t public
+```
+
+The Tailwind CDN play script includes the full DESIGN.md color palette (parchment, copper, vellum, etc.) and font families (Lora, Inter, JetBrains Mono) as inline config.
+
+### Dark mode
+
+Dark mode uses Tailwind's `class` strategy with a toggle in the nav bar. It persists to `localStorage` and respects `prefers-color-scheme` on first visit. Use `dark:` prefixed classes:
+
+```html
+<div class="bg-vellum dark:bg-dark-vellum text-ink dark:text-[#e8e4db]">
+```
+
+### Templates and layouts
+
+Templates use `{{ }}` syntax with layout inheritance:
+
+```html
+{{ @extends 'layout' }}
+
+{{ @section 'title' }}My Page{{ @endsection }}
+
+{{ @section 'content' }}
+<h1>{{ $title }}</h1>
+{{ @endsection }}
+```
+
+Layouts live in `app/Templates/`. The `@extends` directive looks for the layout in the same directory as the child template first, then falls back to `app/Templates/`. Partials use `{{ @include 'partials/nav' }}`.
+
+### HTMX patterns with CQRS
+
+HTMX integrates naturally with Arcanum's CQRS model:
+
+- **Commands return 204** — use `hx-swap="none"` and trigger UI updates via events
+- **Queries return HTML fragments** — use `hx-get` to load data inline
+- **HtmxMiddleware** — copies `Location` headers to `HX-Location` for redirects, enables fragment rendering (layout-less output for partial swaps)
+
+Example from the Contact page:
+```html
+<form hx-post="/contact/submit" hx-swap="none"
+      hx-on::after-request="if(event.detail.successful) { ... }">
+
+<div hx-get="/contact/messages.html" hx-trigger="load, refresh"
+     hx-swap="innerHTML">
+```
+
+### Production
+
+For production, replace the CDN play script with a built CSS file:
+
+```bash
+# Using Tailwind CLI standalone (no Node required):
+npx @tailwindcss/cli -i public/css/app.css -o public/css/built.css --minify
+
+# Or install Tailwind CLI as a standalone binary:
+# https://tailwindcss.com/blog/standalone-cli
+```
+
+Update the layout `<head>` to reference the built CSS file instead of the CDN script.
 
 ## Development
 
