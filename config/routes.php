@@ -56,7 +56,7 @@ return [
      * 'path' => 'format',
      */
     'pages' => [
-        '/' => 'json',
+        // '/' => 'json',
     ],
 
 ];

@@ -1,0 +1,22 @@
+{{ @extends 'layout' }}
+
+{{ @section 'title' }}Health Check{{ @endsection }}
+
+{{ @section 'content' }}
+<div class="max-w-prose">
+    <h1 class="font-heading text-3xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-xl">
+        Health Check
+    </h1>
+    <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-lg">
+        <dl class="m-0">
+            <div class="flex items-baseline justify-between py-sm">
+                <dt class="text-sm font-medium text-charcoal dark:text-[#c4bfb3]">Status</dt>
+                <dd class="m-0 text-sm text-success font-medium">{{ $status }}</dd>
+            </div>
+        </dl>
+    </div>
+    <p class="text-stone text-sm mt-md">
+        <a href="/health.json" class="text-copper hover:text-copper-light no-underline">View as JSON</a>
+    </p>
+</div>
+{{ @endsection }}

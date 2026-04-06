@@ -11,7 +11,7 @@ return [
      * The fallback format when no file extension is present in the URL.
      * Convention routes (e.g., /health) will use this format.
      */
-    'default' => 'json',
+    'default' => 'html',
 
     /**
      * FORMATS

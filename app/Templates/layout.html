@@ -1,10 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
-    <title>{{ @yield 'title' }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ @yield 'title' }} — Arcanum</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&family=Lora:wght@600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS — CDN play script for development. Replace with built CSS for production. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    parchment: '#faf8f1',
+                    vellum: '#f4f1e8',
+                    linen: '#eae6da',
+                    ink: '#2c2a25',
+                    copper: '#b5623f',
+                    'copper-light': '#c8795a',
+                    'copper-dark': '#9e5436',
+                    charcoal: '#3d3a34',
+                    'warm-gray': '#6b675e',
+                    stone: '#9c9789',
+                    sand: '#c4bfb3',
+                    'light-sand': '#ddd9ce',
+                    dust: '#ece9e0',
+                    'deep-parchment': '#1a1915',
+                    'dark-vellum': '#23211b',
+                    'dark-linen': '#2d2b24',
+                    'dark-sand': '#3d3a34',
+                    success: '#4a7c59',
+                    error: '#a63d2f',
+                    warning: '#b8862e',
+                    info: '#4a6fa5',
+                },
+                fontFamily: {
+                    heading: ['Lora', 'Georgia', 'Times New Roman', 'serif'],
+                    body: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+                    code: ['JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Consolas', 'monospace'],
+                },
+            },
+        },
+    }
+    </script>
+    <style type="text/tailwindcss">
+    @layer base {
+        body {
+            @apply bg-parchment text-ink font-body;
+        }
+        .dark body {
+            @apply bg-deep-parchment text-[#e8e4db];
+        }
+    }
+    </style>
+
+    <!-- HTMX — pin to v2.0 -->
+    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+
+    <!-- Dark mode toggle — persisted to localStorage -->
+    <script>
+    (function() {
+        var stored = localStorage.getItem('arcanum-dark-mode');
+        if (stored === 'true' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    })();
+    function toggleDarkMode() {
+        var isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('arcanum-dark-mode', isDark);
+    }
+    </script>
 </head>
-<body>
-    {{ @yield 'content' }}
+<body class="min-h-screen dark:bg-deep-parchment dark:text-[#e8e4db]">
+    {{ @include 'partials/nav' }}
+
+    <main class="max-w-layout mx-auto px-lg py-2xl">
+        {{ @yield 'content' }}
+    </main>
+
+    {{ @include 'partials/footer' }}
 </body>
 </html>
