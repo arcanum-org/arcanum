@@ -13,11 +13,11 @@ final class MessagesHandler
     ) {
     }
 
-    /** @return list<array<string, mixed>> */
+    /** @return array{messages: list<array<string, mixed>>} */
     public function __invoke(Messages $query): array
     {
         $this->model->createTable();
 
-        return $this->model->findAll()->rows();
+        return ['messages' => $this->model->findAll()->rows()];
     }
 }
