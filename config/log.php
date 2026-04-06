@@ -23,6 +23,13 @@ return [
             'level' => LogLevel::DEBUG,
         ],
 
+        // HTTP access log — writes to {files}/logs/requests.log
+        'requests' => [
+            'type' => Handler::STREAM,
+            'path' => 'logs/requests.log',
+            'level' => LogLevel::DEBUG,
+        ],
+
     ],
 
     'channels' => [
@@ -32,6 +39,9 @@ return [
 
         // Deprecation notices from the error handler.
         'deprecations' => ['app'],
+
+        // HTTP request logging via RequestLogger listener.
+        'requests' => ['requests'],
 
     ],
 ];

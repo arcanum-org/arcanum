@@ -105,6 +105,40 @@ $container->specify(
 );
 
 /**
+ * Register the Event Dispatcher
+ */
+$provider = new \Arcanum\Echo\Provider();
+$container->instance(
+    \Psr\EventDispatcher\EventDispatcherInterface::class,
+    new \Arcanum\Echo\Dispatcher($provider),
+);
+
+/**
+ * Register Lifecycle Event Listeners
+ *
+ * The RequestLogger records start time on RequestReceived and logs
+ * method, path, status, and duration on RequestHandled.
+ */
+$container->service(\App\Http\Listener\RequestLogger::class);
+
+$provider->listen(
+    \Arcanum\Hyper\Event\RequestReceived::class,
+    function (\Arcanum\Hyper\Event\RequestReceived $event) use ($container) {
+        /** @var \App\Http\Listener\RequestLogger $logger */
+        $logger = $container->get(\App\Http\Listener\RequestLogger::class);
+        return $logger->onRequestReceived($event);
+    },
+);
+$provider->listen(
+    \Arcanum\Hyper\Event\RequestHandled::class,
+    function (\Arcanum\Hyper\Event\RequestHandled $event) use ($container) {
+        /** @var \App\Http\Listener\RequestLogger $logger */
+        $logger = $container->get(\App\Http\Listener\RequestLogger::class);
+        return $logger->onRequestHandled($event);
+    },
+);
+
+/**
  * Register the Application's Error Handler
  */
 $container->service(\Arcanum\Glitch\ErrorHandler::class, \App\Error\Handler::class);
