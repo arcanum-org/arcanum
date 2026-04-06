@@ -34,23 +34,9 @@ module.exports = {
         body: ['Inter', 'system-ui', '-apple-system', "'Segoe UI'", 'sans-serif'],
         code: ["'JetBrains Mono'", "'Fira Code'", "'Source Code Pro'", 'Consolas', 'monospace'],
       },
-      spacing: {
-        xs: '4px',
-        sm: '8px',
-        md: '16px',
-        lg: '24px',
-        xl: '32px',
-        '2xl': '48px',
-        '3xl': '64px',
-        '4xl': '96px',
-      },
       maxWidth: {
         prose: '720px',
         layout: '1120px',
-      },
-      borderRadius: {
-        DEFAULT: '6px',
-        lg: '8px',
       },
     },
   },

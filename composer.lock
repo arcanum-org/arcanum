@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../arcanum-org/framework",
-                "reference": "becde2da73195026a449a80bc94cbb41b31f847c"
+                "reference": "4aee3e62538277eb0ac6b689ff8d228e5ceb8d0d"
             },
             "require": {
                 "monolog/monolog": "^3.4",
@@ -29,7 +29,7 @@
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.9",
-                "phpmetrics/phpmetrics": "v3.0.0rc8",
+                "phpmetrics/phpmetrics": "^2.9",
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^13.0",
                 "squizlabs/php_codesniffer": "^3.7"

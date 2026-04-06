@@ -4,10 +4,10 @@
 
 {{ @section 'content' }}
 <div class="max-w-prose">
-    <h1 class="font-heading text-3xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-md">
+    <h1 class="font-heading text-3xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
         Contact Us
     </h1>
-    <p class="text-warm-gray dark:text-stone mb-xl">
+    <p class="text-warm-gray dark:text-stone mb-8">
         Send us a message and we'll get back to you.
     </p>
 
@@ -17,20 +17,20 @@
           hx-on::after-request="if(event.detail.successful) { this.reset(); document.getElementById('messages').dispatchEvent(new Event('refresh')); }">
         {{ @csrf }}
 
-        <div class="mb-md">
-            <label class="block text-sm font-medium text-charcoal dark:text-[#c4bfb3] mb-xs" for="name">Name</label>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-charcoal dark:text-[#c4bfb3] mb-1" for="name">Name</label>
             <input type="text" id="name" name="name" required
                    class="w-full px-3.5 py-2.5 bg-linen dark:bg-dark-linen border border-sand dark:border-dark-sand rounded text-ink dark:text-[#e8e4db] placeholder-stone focus:outline-none focus:border-copper focus:ring-2 focus:ring-copper/15 focus:bg-white dark:focus:bg-dark-linen">
         </div>
 
-        <div class="mb-md">
-            <label class="block text-sm font-medium text-charcoal dark:text-[#c4bfb3] mb-xs" for="email">Email</label>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-charcoal dark:text-[#c4bfb3] mb-1" for="email">Email</label>
             <input type="email" id="email" name="email" required
                    class="w-full px-3.5 py-2.5 bg-linen dark:bg-dark-linen border border-sand dark:border-dark-sand rounded text-ink dark:text-[#e8e4db] placeholder-stone focus:outline-none focus:border-copper focus:ring-2 focus:ring-copper/15 focus:bg-white dark:focus:bg-dark-linen">
         </div>
 
-        <div class="mb-xl">
-            <label class="block text-sm font-medium text-charcoal dark:text-[#c4bfb3] mb-xs" for="message">Message</label>
+        <div class="mb-8">
+            <label class="block text-sm font-medium text-charcoal dark:text-[#c4bfb3] mb-1" for="message">Message</label>
             <textarea id="message" name="message" rows="4" required
                       class="w-full px-3.5 py-2.5 bg-linen dark:bg-dark-linen border border-sand dark:border-dark-sand rounded text-ink dark:text-[#e8e4db] placeholder-stone focus:outline-none focus:border-copper focus:ring-2 focus:ring-copper/15 focus:bg-white dark:focus:bg-dark-linen resize-y"></textarea>
         </div>
@@ -41,7 +41,7 @@
         </button>
     </form>
 
-    <div id="messages" class="mt-3xl border-t border-light-sand dark:border-dark-sand pt-xl"
+    <div id="messages" class="mt-16 border-t border-light-sand dark:border-dark-sand pt-8"
          hx-get="/contact/messages.html" hx-trigger="load, refresh" hx-swap="innerHTML">
     </div>
 </div>
