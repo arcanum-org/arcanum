@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Helpers;
 
 use App\Http\Listener\RequestCounter;
-use App\Http\RenderMetrics;
 use Arcanum\Gather\Configuration;
+use Arcanum\Hourglass\Stopwatch;
 use Arcanum\Ignition\Kernel;
 use Composer\InstalledVersions;
 use Psr\SimpleCache\CacheInterface;
@@ -34,7 +34,7 @@ final class EnvCheckHelper
     public function __construct(
         private readonly Configuration $config,
         private readonly Kernel $kernel,
-        private readonly RenderMetrics $metrics,
+        private readonly Stopwatch $stopwatch,
         private readonly CacheInterface $cache,
     ) {
     }
@@ -149,7 +149,8 @@ final class EnvCheckHelper
 
     public function renderDurationMs(): ?float
     {
-        return $this->metrics->elapsedMs();
+        $elapsed = $this->stopwatch->timeSince('request.received');
+        return $elapsed !== null ? round($elapsed, 2) : null;
     }
 
     public function requestCount(): int

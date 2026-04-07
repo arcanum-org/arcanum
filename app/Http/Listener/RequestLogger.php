@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Listener;
 
-use App\Http\RenderMetrics;
+use Arcanum\Hourglass\Stopwatch;
 use Arcanum\Hyper\Event\RequestHandled;
-use Arcanum\Hyper\Event\RequestReceived;
 use Arcanum\Quill\ChannelLogger;
 
 /**
  * Logs HTTP requests with method, path, status, and duration.
  *
- * Listens to RequestReceived to record the start time, and
- * RequestHandled to log the completed request. Log level is
- * determined by the response status code:
- *   2xx → info, 4xx → warning, 5xx → error.
+ * Listens to RequestHandled and reads the elapsed time from the framework
+ * Stopwatch — specifically since the request.received instant the kernel
+ * records before any application code runs. Log level is determined by the
+ * response status code: 2xx → info, 4xx → warning, 5xx → error.
  *
  * Uses the 'requests' log channel for a separate HTTP access log.
  */
@@ -23,24 +22,8 @@ final class RequestLogger
 {
     public function __construct(
         private readonly ChannelLogger $logger,
-        private readonly RenderMetrics $metrics,
+        private readonly Stopwatch $stopwatch,
     ) {
-    }
-
-    public function onRequestReceived(RequestReceived $event): RequestReceived
-    {
-        $startTime = microtime(true);
-
-        $this->metrics->setStartTime($startTime);
-
-        $event->setRequest(
-            $event->getRequest()->withAttribute(
-                'arcanum.start_time',
-                $startTime,
-            ),
-        );
-
-        return $event;
     }
 
     public function onRequestHandled(RequestHandled $event): RequestHandled
@@ -49,10 +32,8 @@ final class RequestLogger
         $response = $event->getResponse();
         $status = $response->getStatusCode();
 
-        $startTime = $request->getAttribute('arcanum.start_time');
-        $duration = is_float($startTime)
-            ? round((microtime(true) - $startTime) * 1000, 2)
-            : null;
+        $elapsed = $this->stopwatch->timeSince('request.received');
+        $duration = $elapsed !== null ? round($elapsed, 2) : null;
 
         $context = [
             'method' => $request->getMethod(),

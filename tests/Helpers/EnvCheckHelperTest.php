@@ -6,9 +6,9 @@ namespace App\Test\Helpers;
 
 use App\Helpers\EnvCheckHelper;
 use App\Http\Listener\RequestCounter;
-use App\Http\RenderMetrics;
 use App\Test\Http\Listener\InMemoryCache;
 use Arcanum\Gather\Configuration;
+use Arcanum\Hourglass\Stopwatch;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
@@ -200,20 +200,21 @@ final class EnvCheckHelperTest extends TestCase
 
     // ── Render-time metrics ───────────────────────────────────────
 
-    public function testRenderDurationNullBeforeStart(): void
+    public function testRenderDurationNullBeforeRequestReceived(): void
     {
+        // Stopwatch with no request.received instant — null elapsed.
         $helper = $this->makeHelper();
 
         $this->assertNull($helper->renderDurationMs());
     }
 
-    public function testRenderDurationReportsElapsed(): void
+    public function testRenderDurationReportsElapsedSinceRequestReceived(): void
     {
-        $metrics = new RenderMetrics();
-        $metrics->setStartTime(microtime(true));
+        $stopwatch = new Stopwatch(microtime(true));
+        $stopwatch->mark('request.received', microtime(true));
         usleep(1000); // 1ms
 
-        $helper = $this->makeHelper(metrics: $metrics);
+        $helper = $this->makeHelper(stopwatch: $stopwatch);
 
         $elapsed = $helper->renderDurationMs();
 
@@ -252,13 +253,13 @@ final class EnvCheckHelperTest extends TestCase
 
     private function makeHelper(
         ?Configuration $config = null,
-        ?RenderMetrics $metrics = null,
+        ?Stopwatch $stopwatch = null,
         ?InMemoryCache $cache = null,
     ): EnvCheckHelper {
         return new EnvCheckHelper(
             config: $config ?? new Configuration([]),
             kernel: new FixtureKernel($this->tmpRoot),
-            metrics: $metrics ?? new RenderMetrics(),
+            stopwatch: $stopwatch ?? new Stopwatch(),
             cache: $cache ?? new InMemoryCache(),
         );
     }

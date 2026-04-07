@@ -122,24 +122,14 @@ $container->instance(
 /**
  * Register Lifecycle Event Listeners
  *
- * The RequestLogger records start time on RequestReceived and logs
- * method, path, status, and duration on RequestHandled. The same start
- * time is also stored on RenderMetrics so template helpers (e.g. on the
- * welcome page) can show "rendered in X ms" without parsing request
- * attributes.
+ * RequestLogger logs method, path, status, and duration on RequestHandled,
+ * reading the elapsed time from the framework Stopwatch. RequestCounter
+ * increments a Vault counter so the welcome page can show "request #N
+ * since boot".
  */
-$container->instance(\App\Http\RenderMetrics::class, new \App\Http\RenderMetrics());
 $container->service(\App\Http\Listener\RequestLogger::class);
 $container->service(\App\Http\Listener\RequestCounter::class);
 
-$provider->listen(
-    \Arcanum\Hyper\Event\RequestReceived::class,
-    function (\Arcanum\Hyper\Event\RequestReceived $event) use ($container) {
-        /** @var \App\Http\Listener\RequestLogger $logger */
-        $logger = $container->get(\App\Http\Listener\RequestLogger::class);
-        return $logger->onRequestReceived($event);
-    },
-);
 $provider->listen(
     \Arcanum\Hyper\Event\RequestHandled::class,
     function (\Arcanum\Hyper\Event\RequestHandled $event) use ($container) {
