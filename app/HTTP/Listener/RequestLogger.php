@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Listener;
 
+use App\Http\RenderMetrics;
 use Arcanum\Hyper\Event\RequestHandled;
 use Arcanum\Hyper\Event\RequestReceived;
 use Arcanum\Quill\ChannelLogger;
@@ -22,15 +23,20 @@ final class RequestLogger
 {
     public function __construct(
         private readonly ChannelLogger $logger,
+        private readonly RenderMetrics $metrics,
     ) {
     }
 
     public function onRequestReceived(RequestReceived $event): RequestReceived
     {
+        $startTime = microtime(true);
+
+        $this->metrics->setStartTime($startTime);
+
         $event->setRequest(
             $event->getRequest()->withAttribute(
                 'arcanum.start_time',
-                microtime(true),
+                $startTime,
             ),
         );
 

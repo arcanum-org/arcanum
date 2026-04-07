@@ -117,8 +117,12 @@ $container->instance(
  * Register Lifecycle Event Listeners
  *
  * The RequestLogger records start time on RequestReceived and logs
- * method, path, status, and duration on RequestHandled.
+ * method, path, status, and duration on RequestHandled. The same start
+ * time is also stored on RenderMetrics so template helpers (e.g. on the
+ * welcome page) can show "rendered in X ms" without parsing request
+ * attributes.
  */
+$container->instance(\App\Http\RenderMetrics::class, new \App\Http\RenderMetrics());
 $container->service(\App\Http\Listener\RequestLogger::class);
 
 $provider->listen(
