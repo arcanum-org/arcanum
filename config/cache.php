@@ -47,18 +47,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Framework Store Mapping
+    | Framework Caches
     |--------------------------------------------------------------------------
     |
-    | Maps framework cache purposes to store names. The framework reads this
-    | mapping during bootstrap. Override to move framework caches to faster
-    | drivers (e.g., 'pages' => 'apcu').
+    | enabled — master switch for every framework-internal cache (templates,
+    |           helpers, page discovery, middleware discovery, configuration).
+    |           Set to false to force the framework to rebuild compiled
+    |           artefacts on every request. Useful while iterating on
+    |           templates and page structure when you want a completely fresh
+    |           pull on every refresh.
+    |
+    |           This is independent of APP_DEBUG — you can run with caches
+    |           off while debug is on, or vice versa.
+    |
+    | stores  — maps framework cache purposes to store names. Override to
+    |           move framework caches to faster drivers (e.g. 'pages' => 'apcu').
     |
     */
 
     'framework' => [
-        'pages'      => 'file',
-        'middleware'  => 'file',
+        'enabled' => ($_ENV['APP_FRAMEWORK_CACHE'] ?? 'true') === 'true',
+
+        'stores' => [
+            'pages'      => 'file',
+            'middleware' => 'file',
+        ],
     ],
 
     /*
