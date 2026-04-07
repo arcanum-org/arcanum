@@ -124,6 +124,7 @@ $container->instance(
  */
 $container->instance(\App\Http\RenderMetrics::class, new \App\Http\RenderMetrics());
 $container->service(\App\Http\Listener\RequestLogger::class);
+$container->service(\App\Http\Listener\RequestCounter::class);
 
 $provider->listen(
     \Arcanum\Hyper\Event\RequestReceived::class,
@@ -139,6 +140,14 @@ $provider->listen(
         /** @var \App\Http\Listener\RequestLogger $logger */
         $logger = $container->get(\App\Http\Listener\RequestLogger::class);
         return $logger->onRequestHandled($event);
+    },
+);
+$provider->listen(
+    \Arcanum\Hyper\Event\RequestHandled::class,
+    function (\Arcanum\Hyper\Event\RequestHandled $event) use ($container) {
+        /** @var \App\Http\Listener\RequestCounter $counter */
+        $counter = $container->get(\App\Http\Listener\RequestCounter::class);
+        return $counter->onRequestHandled($event);
     },
 );
 
