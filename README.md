@@ -62,9 +62,9 @@ That's it. No route registration needed — the convention does the work:
 ### Commands (write operations)
 
 ```
-PUT /contact/submit
- → resolves to App\Domain\Contact\Command\Submit
- → dispatched to App\Domain\Contact\Command\SubmitHandler
+PUT /orders/place
+ → resolves to App\Domain\Orders\Command\Place
+ → dispatched to App\Domain\Orders\Command\PlaceHandler
  → void handler → 204 No Content
 ```
 
@@ -104,13 +104,9 @@ Templates use `{{ }}` syntax: `{{ $title }}`, `{{ foreach($items as $item) }}`, 
 app/
   Domain/           # CQRS handlers — organized by feature
     Query/          # Root-level queries (Health)
-    Contact/        # Contact feature
-      Command/      # Write operations (Submit, persists to SQLite)
-      Query/        # Read operations (Messages)
-      Model/        # Forge SQL files (Save.sql, FindAll.sql)
     Auth/           # Auth examples (Whoami, AdminOnly)
       Query/        # Read operations requiring auth
-  Pages/            # Template-driven routes (Index, Contact)
+  Pages/            # Template-driven routes (Index)
   Templates/        # Shared layouts and partials
     layout.html     # Base layout (Tailwind, HTMX, nav, footer)
     partials/       # Reusable fragments (nav.html, footer.html)
@@ -300,12 +296,12 @@ HTMX integrates naturally with Arcanum's CQRS model:
 - **Queries return HTML fragments** — use `hx-get` to load data inline
 - **HtmxMiddleware** — copies `Location` headers to `HX-Location` for redirects, enables fragment rendering (layout-less output for partial swaps)
 
-Example from the Contact page:
+Example pattern:
 ```html
-<form hx-post="/contact/submit" hx-swap="none"
+<form hx-post="/orders/place" hx-swap="none"
       hx-on::after-request="if(event.detail.successful) { ... }">
 
-<div hx-get="/contact/messages.html" hx-trigger="load, refresh"
+<div hx-get="/orders/list.html" hx-trigger="load, refresh"
      hx-swap="innerHTML">
 ```
 
