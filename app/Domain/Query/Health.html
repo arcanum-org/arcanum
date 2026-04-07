@@ -1,8 +1,8 @@
-{{ @extends 'layout' }}
+{{ extends 'layout' }}
 
-{{ @section 'title' }}Health Check{{ @endsection }}
+{{ section 'title' }}Health Check{{ endsection }}
 
-{{ @section 'content' }}
+{{ section 'content' }}
 <div class="max-w-prose">
     <h1 class="font-heading text-3xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-8">
         Health Check
@@ -19,4 +19,4 @@
         <a href="/health.json" class="text-copper hover:text-copper-light no-underline">View as JSON</a>
     </p>
 </div>
-{{ @endsection }}
+{{ endsection }}

@@ -1,8 +1,8 @@
-{{ @extends 'layout' }}
+{{ extends 'layout' }}
 
-{{ @section 'title' }}Contact Us{{ @endsection }}
+{{ section 'title' }}Contact Us{{ endsection }}
 
-{{ @section 'content' }}
+{{ section 'content' }}
 <div class="max-w-prose">
     <h1 class="font-heading text-3xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
         Contact Us
@@ -15,7 +15,7 @@
           hx-post="/contact/submit"
           hx-swap="none"
           hx-on::after-request="if(event.detail.successful) { this.reset(); document.getElementById('messages').dispatchEvent(new Event('refresh')); }">
-        {{ @csrf }}
+        {{ csrf }}
 
         <div class="mb-4">
             <label class="block text-sm font-medium text-charcoal dark:text-[#c4bfb3] mb-1" for="name">Name</label>
@@ -45,4 +45,4 @@
          hx-get="/contact/messages.html" hx-trigger="load, refresh" hx-swap="innerHTML">
     </div>
 </div>
-{{ @endsection }}
+{{ endsection }}
