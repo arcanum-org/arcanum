@@ -26,7 +26,9 @@ use Psr\SimpleCache\CacheInterface;
 final class RateLimit implements MiddlewareInterface
 {
     private readonly RateLimiter $limiter;
+    /** @var positive-int */
     private readonly int $limit;
+    /** @var positive-int */
     private readonly int $window;
 
     public function __construct(CacheInterface $cache, Configuration $config)
@@ -46,13 +48,16 @@ final class RateLimit implements MiddlewareInterface
         };
 
         $this->limiter = new RateLimiter($cache, $throttler);
-        $this->limit = $limit;
-        $this->window = $window;
+        $this->limit = $limit > 0 ? $limit : 60;
+        $this->window = $window > 0 ? $window : 60;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $key = $request->getServerParams()['REMOTE_ADDR'] ?? 'unknown';
+        $remote = $request->getServerParams()['REMOTE_ADDR'] ?? 'unknown';
+        // PSR-16 cache keys forbid {}()/\@: — IPv6 addresses contain colons,
+        // so we hash to produce a safe deterministic key.
+        $key = 'throttle.' . hash('xxh128', (string) $remote);
         $quota = $this->limiter->attempt($key, $this->limit, $this->window);
 
         if (! $quota->isAllowed()) {
