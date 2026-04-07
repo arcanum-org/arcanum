@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# Watch and rebuild the Tailwind CSS bundle on changes.
+#
+# Requires the Tailwind standalone CLI on PATH. See contrib/css-build
+# for installation instructions.
+
+set -e
+
+if ! command -v tailwindcss >/dev/null 2>&1; then
+    echo "tailwindcss not found on PATH."
+    echo "Install the standalone CLI: https://tailwindcss.com/blog/standalone-cli"
+    exit 1
+fi
+
+tailwindcss \
+    --config tailwind.config.js \
+    --input public/css/app.css \
+    --output public/css/app.min.css \
+    --watch

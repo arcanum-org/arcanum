@@ -38,6 +38,27 @@ $kernel = $container->get(\Arcanum\Ignition\Kernel::class);
 $kernel->bootstrap($container);
 
 /**
+ * Production CSS guardrail
+ *
+ * If the app is running in production (APP_DEBUG=false) and the built
+ * Tailwind bundle is missing, log a warning so the developer notices.
+ * Without this, the Tailwind CDN play script silently ships to prod —
+ * functional but unsuitable.
+ */
+if (
+    ($_ENV['APP_DEBUG'] ?? 'false') !== 'true'
+    && !file_exists(__DIR__ . '/css/app.min.css')
+) {
+    /** @var \Arcanum\Quill\ChannelLogger $logger */
+    $logger = $container->get(\Arcanum\Quill\ChannelLogger::class);
+    $logger->channel('default')->warning(
+        'Production CSS bundle missing — run `composer css:build` to generate '
+        . 'public/css/app.min.css. The CDN play script is being served instead, '
+        . 'which is not suitable for production.'
+    );
+}
+
+/**
  * Get the Hyper Server to serve the request
  *
  * @var \Arcanum\Hyper\Server $server

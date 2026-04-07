@@ -170,6 +170,27 @@ $container->specify(
 $container->service(\Arcanum\Hyper\EmptyResponseRenderer::class);
 
 /**
+ * Register the App template helper
+ *
+ * AppHelper is exposed in templates as the `App` alias via app/Helpers.php.
+ * It needs the debug flag and the public directory path so it can decide
+ * whether the production CSS bundle is available.
+ */
+$container->service(\App\Helpers\AppHelper::class);
+
+$container->specify(
+    when: \App\Helpers\AppHelper::class,
+    needs: '$debug',
+    give: $isDebug,
+);
+
+$container->specify(
+    when: \App\Helpers\AppHelper::class,
+    needs: '$publicDirectory',
+    give: $rootDirectory . '/public',
+);
+
+/**
  * Return the configured container
  *
  * Atlas routing, FormatRegistry, Hydrator, and JsonRenderer are registered

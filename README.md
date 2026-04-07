@@ -309,19 +309,49 @@ Example from the Contact page:
      hx-swap="innerHTML">
 ```
 
-### Production
+### Production build
 
-For production, replace the CDN play script with a built CSS file:
+The CDN play script is fine for development but not for production — it ships the entire Tailwind compiler to every visitor. The starter app includes a built-CSS path that takes over automatically when the bundle is present.
+
+**Install the Tailwind standalone CLI** (no Node required):
 
 ```bash
-# Using Tailwind CLI standalone (no Node required):
-npx @tailwindcss/cli -i public/css/app.css -o public/css/built.css --minify
+# macOS
+brew install tailwindcss
 
-# Or install Tailwind CLI as a standalone binary:
-# https://tailwindcss.com/blog/standalone-cli
+# Linux
+curl -sLo /usr/local/bin/tailwindcss \
+    https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
+chmod +x /usr/local/bin/tailwindcss
 ```
 
-Update the layout `<head>` to reference the built CSS file instead of the CDN script.
+**Build or watch:**
+
+```bash
+composer css:build   # one-shot, minified → public/css/app.min.css
+composer css:watch   # rebuild on file changes
+```
+
+**How the layout chooses CDN vs built:**
+
+The base layout calls `{{! App::cssTags() !}}`, which is provided by `App\Helpers\AppHelper`. At render time it checks for `public/css/app.min.css`:
+
+- **File exists** → emits `<link rel="stylesheet" href="/css/app.min.css">`
+- **File missing** → emits the Tailwind CDN play script with the inline config
+
+No layout edits needed when shipping to production — just run `composer css:build` and the layout switches automatically.
+
+**Production guardrail:**
+
+If `APP_DEBUG=false` and `public/css/app.min.css` is missing, the front controller logs a warning to the default channel:
+
+```
+Production CSS bundle missing — run `composer css:build` to generate
+public/css/app.min.css. The CDN play script is being served instead,
+which is not suitable for production.
+```
+
+So a missed build step won't silently ship the CDN script to production traffic — it shows up in `files/logs/app.log` immediately.
 
 ## Development
 

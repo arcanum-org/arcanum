@@ -1,0 +1,26 @@
+/*
+ * Tailwind entry file.
+ *
+ * Compiled to public/css/app.min.css by `composer css:build` (or watched
+ * with `composer css:watch`). The compiled bundle is what production
+ * actually serves; the CDN play script is only loaded when this file
+ * has not yet been built.
+ *
+ * The base layer rules below were originally inlined in app/Templates/
+ * layout.html. They live here so the production bundle is the source
+ * of truth.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-parchment text-ink font-body;
+    }
+
+    .dark body {
+        @apply bg-deep-parchment text-[#e8e4db];
+    }
+}

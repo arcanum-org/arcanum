@@ -50,6 +50,8 @@
         "cs-check": "bash contrib/cs-check",
         "cs-fix": "phpcbf --colors --standard=./contrib/phpcs-ruleset.xml --ignore=.coverage,.phpunit.cache",
         "phpstan": "bash contrib/phpstan",
-        "phpunit": "phpunit --colors=always --configuration=contrib/phpunit.xml"
+        "phpunit": "phpunit --colors=always --configuration=contrib/phpunit.xml",
+        "css:build": "bash contrib/css-build",
+        "css:watch": "bash contrib/css-watch"
     }
 }

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Build the production Tailwind CSS bundle.
+#
+# Requires the Tailwind standalone CLI on PATH. Install it from:
+#   https://tailwindcss.com/blog/standalone-cli
+#
+# On macOS:  brew install tailwindcss
+# On Linux:  curl -sLo /usr/local/bin/tailwindcss \
+#              https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
+#            chmod +x /usr/local/bin/tailwindcss
+
+set -e
+
+if ! command -v tailwindcss >/dev/null 2>&1; then
+    echo "tailwindcss not found on PATH."
+    echo "Install the standalone CLI: https://tailwindcss.com/blog/standalone-cli"
+    exit 1
+fi
+
+tailwindcss \
+    --config tailwind.config.js \
+    --input public/css/app.css \
+    --output public/css/app.min.css \
+    --minify
+
+echo "Built public/css/app.min.css"
