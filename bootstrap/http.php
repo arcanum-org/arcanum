@@ -35,7 +35,13 @@ $container->service(Kernel::class, WebKernel::class);
 /**
  * Specify the WebKernel's primitive constructor arguments
  */
-$rootDirectory = $_ENV['APP_ROOT_DIR'] ?? realpath(__DIR__ . '/..');
+$rootDirectoryEnv = $_ENV['APP_ROOT_DIR'] ?? null;
+$rootDirectory = is_string($rootDirectoryEnv)
+    ? $rootDirectoryEnv
+    : realpath(__DIR__ . '/..');
+if ($rootDirectory === false) {
+    throw new \RuntimeException('Could not resolve application root directory');
+}
 
 $container->specify(
     when: WebKernel::class,

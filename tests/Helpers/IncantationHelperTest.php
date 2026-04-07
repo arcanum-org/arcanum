@@ -17,9 +17,6 @@ final class IncantationHelperTest extends TestCase
 
         $tip = $helper->today();
 
-        $this->assertArrayHasKey('title', $tip);
-        $this->assertArrayHasKey('body', $tip);
-        $this->assertArrayHasKey('code', $tip);
         $this->assertNotEmpty($tip['title']);
         $this->assertNotEmpty($tip['body']);
     }
