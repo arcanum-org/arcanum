@@ -126,13 +126,13 @@ final class EnvCheckHelper
 
     public function debugMode(): bool
     {
-        $value = $this->config->get('debug');
+        $value = $this->config->get('app.debug');
         return is_bool($value) ? $value : ($value === 'true' || $value === '1' || $value === 1);
     }
 
     public function appEnvironment(): string
     {
-        $value = $this->config->get('environment');
+        $value = $this->config->get('app.environment');
         return is_string($value) ? $value : 'unknown';
     }
 

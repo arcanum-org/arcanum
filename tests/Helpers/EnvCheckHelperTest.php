@@ -154,7 +154,7 @@ final class EnvCheckHelperTest extends TestCase
     public function testDebugModeReadsBoolConfig(): void
     {
         $helper = $this->makeHelper(config: new Configuration([
-            'debug' => true,
+            'app' => ['debug' => true],
         ]));
 
         $this->assertTrue($helper->debugMode());
@@ -164,7 +164,7 @@ final class EnvCheckHelperTest extends TestCase
     {
         // Real-world: $_ENV values are always strings.
         $helper = $this->makeHelper(config: new Configuration([
-            'debug' => 'true',
+            'app' => ['debug' => 'true'],
         ]));
 
         $this->assertTrue($helper->debugMode());
@@ -180,7 +180,7 @@ final class EnvCheckHelperTest extends TestCase
     public function testAppEnvironmentReadsConfig(): void
     {
         $helper = $this->makeHelper(config: new Configuration([
-            'environment' => 'staging',
+            'app' => ['environment' => 'staging'],
         ]));
 
         $this->assertSame('staging', $helper->appEnvironment());
