@@ -13,6 +13,7 @@ return [
     */
     'global' => [
         \App\Http\Middleware\Cors::class,
+        \App\Http\Middleware\RateLimit::class,
         \App\Http\Middleware\Htmx::class,
     ],
 ];
