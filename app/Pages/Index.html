@@ -228,13 +228,22 @@
             <label for="cqrs-p" class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone peer-checked/p:text-copper peer-checked/p:dark:text-copper-light peer-checked/p:bg-parchment peer-checked/p:dark:bg-deep-parchment peer-checked/p:border-b-2 peer-checked/p:border-copper">Page</label>
         </div>
 
-        <pre class="hidden peer-checked/q:block m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class Health {}
+        <pre class="hidden peer-checked/q:block m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class Health
+{
+    public function __construct(
+        public readonly bool $verbose = false,
+    ) {}
+}
 
 final class HealthHandler
 {
     public function __invoke(Health $q): array
     {
-        return ['status' =&gt; 'ok'];
+        $result = ['status' =&gt; 'ok'];
+        if ($q-&gt;verbose) {
+            $result['php'] = PHP_VERSION;
+        }
+        return $result;
     }
 }</code></pre>
 
@@ -247,6 +256,10 @@ final class HealthHandler
 
 final class SubscribeNewsletterHandler
 {
+    public function __construct(
+        private readonly Subscribers $subscribers,
+    ) {}
+
     public function __invoke(SubscribeNewsletter $c): void
     {
         $this-&gt;subscribers-&gt;add($c-&gt;email);
@@ -258,11 +271,19 @@ final class About
 {
     public function __construct(
         public readonly string $name = 'Arcanum',
+        public readonly array $packages = [
+            'Cabinet', 'Codex', 'Flow', 'Atlas',
+        ],
     ) {}
 }
 
 // app/Pages/About.html
-&lt;h1&gt;About {{ $name }}&lt;/h1&gt;</code></pre>
+&lt;h1&gt;About &#123;&#123; $name &#125;&#125;&lt;/h1&gt;
+&lt;ul&gt;
+    &#123;&#123; foreach $packages as $pkg &#125;&#125;
+    &lt;li&gt;&#123;&#123; $pkg &#125;&#125;&lt;/li&gt;
+    &#123;&#123; endforeach &#125;&#125;
+&lt;/ul&gt;</code></pre>
     </div>
 </div>
 
