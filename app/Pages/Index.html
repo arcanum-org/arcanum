@@ -119,24 +119,24 @@
         </h2>
         <ul class="space-y-2 m-0 p-0 list-none">
             <li class="flex items-start gap-3">
-                <span class="inline-block w-2 h-2 rounded-full mt-2 bg-info"></span>
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::cacheDriver() === 'unknown' ? 'bg-error' : 'bg-success' }}"></span>
                 <span class="text-[15px] text-ink dark:text-[#e8e4db]">
                     Cache driver
-                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::cacheDriver() }}</span>
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::cacheDriver() === 'unknown' ? 'config broken' : Env::cacheDriver() }}</span>
                 </span>
             </li>
             <li class="flex items-start gap-3">
-                <span class="inline-block w-2 h-2 rounded-full mt-2 bg-info"></span>
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::sessionDriver() ? 'bg-success' : 'bg-warning' }}"></span>
                 <span class="text-[15px] text-ink dark:text-[#e8e4db]">
                     Session driver
-                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::sessionDriver() ?? 'not configured' }}</span>
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::sessionDriver() ?? 'not configured (optional — required for CSRF)' }}</span>
                 </span>
             </li>
             <li class="flex items-start gap-3">
-                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::databaseConnection() ? 'bg-info' : 'bg-warning' }}"></span>
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::databaseConnection() ? 'bg-success' : 'bg-warning' }}"></span>
                 <span class="text-[15px] text-ink dark:text-[#e8e4db]">
                     Database
-                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::databaseConnection() ?? 'not configured' }}</span>
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::databaseConnection() ?? 'not configured (optional)' }}</span>
                 </span>
             </li>
             <li class="flex items-start gap-3">
