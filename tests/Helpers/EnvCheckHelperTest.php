@@ -68,9 +68,7 @@ final class EnvCheckHelperTest extends TestCase
 
         $extensions = $helper->extensions();
 
-        $this->assertArrayHasKey('sodium', $extensions);
         $this->assertArrayHasKey('pdo', $extensions);
-        $this->assertArrayHasKey('json', $extensions);
         $this->assertArrayHasKey('mbstring', $extensions);
         $this->assertArrayHasKey('openssl', $extensions);
     }

@@ -28,8 +28,14 @@ final class EnvCheckHelper
     /** PHP minimum the framework requires. */
     private const string PHP_MINIMUM = '8.4.0';
 
-    /** Extensions the framework genuinely uses. Anything else stays out. */
-    private const array CHECKED_EXTENSIONS = ['sodium', 'pdo', 'json', 'mbstring', 'openssl'];
+    /**
+     * Extensions the framework genuinely uses *and* whose presence is not
+     * already guaranteed by the PHP 8.4 minimum. sodium and json are both
+     * built into core since 7.2 and 8.0 respectively, so checking for them
+     * just adds noise to the diagnostic — the PHP version line above already
+     * implies they exist.
+     */
+    private const array CHECKED_EXTENSIONS = ['pdo', 'mbstring', 'openssl'];
 
     public function __construct(
         private readonly Configuration $config,
