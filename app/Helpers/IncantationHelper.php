@@ -5,18 +5,27 @@ declare(strict_types=1);
 namespace App\Helpers;
 
 /**
- * Tip-of-the-day helper for the welcome page.
+ * Rotating tip helper for the welcome page.
  *
- * Pure, no I/O — a hardcoded list of useful Arcanum tricks rotates
- * deterministically through the day-of-year, so the same tip stays
- * stable for a calendar day and changes at midnight without any
- * persistent state.
+ * Pure, no I/O — a hardcoded list of useful Arcanum tricks. The selected
+ * index is randomized per helper instance and cached, so every request
+ * shows a fresh tip but the same tip stays stable within one render
+ * (title, body, and code stay in sync no matter how many times the
+ * template asks for them).
+ *
+ * The welcome page is viewed during setup and rarely afterwards, so
+ * rotating per-request lets a new dev see most of the catalog by
+ * refreshing a few times rather than waiting through 15 days for
+ * day-of-year rotation to cycle.
  *
  * Declared per-page on the Index DTO via #[WithHelper], not registered
  * globally. Other pages don't need it.
  */
 final class IncantationHelper
 {
+    private ?int $pickedIndex = null;
+
+
     /**
      * @return list<array{title: string, body: string, code: ?string}>
      */
@@ -43,7 +52,7 @@ final class IncantationHelper
                 'body' => 'The body of {{ }} is a real PHP expression. Helper calls can be'
                     . ' followed by array access, method chains, arithmetic, ternaries, or'
                     . ' nested helper calls — anything PHP allows after a method call.',
-                'code' => "{{ Tip::today()['title'] }}\n"
+                'code' => "{{ Tip::pick()['title'] }}\n"
                     . '{{ Format::number(Math::pi(), 2) }}',
             ],
             [
@@ -155,15 +164,24 @@ final class IncantationHelper
     }
 
     /**
-     * Return today's incantation, picked deterministically by day-of-year.
+     * Return the picked incantation for this request.
+     *
+     * The index is chosen randomly the first time it's requested and
+     * cached on the instance, so multiple template calls within one
+     * render return the same tip. A fresh request gets a fresh pick.
      *
      * @return array{title: string, body: string, code: ?string}
      */
-    public function today(): array
+    public function pick(): array
     {
         $tips = $this->tips();
+        $max = count($tips) - 1;
 
-        return $tips[(int) date('z') % count($tips)];
+        if ($this->pickedIndex === null) {
+            $this->pickedIndex = $max > 0 ? random_int(0, $max) : 0;
+        }
+
+        return $tips[$this->pickedIndex];
     }
 
     /**

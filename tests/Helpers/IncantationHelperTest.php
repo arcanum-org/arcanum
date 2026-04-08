@@ -15,7 +15,7 @@ final class IncantationHelperTest extends TestCase
     {
         $helper = new IncantationHelper();
 
-        $tip = $helper->today();
+        $tip = $helper->pick();
 
         $this->assertNotEmpty($tip['title']);
         $this->assertNotEmpty($tip['body']);
@@ -25,8 +25,8 @@ final class IncantationHelperTest extends TestCase
     {
         $helper = new IncantationHelper();
 
-        $first = $helper->today();
-        $second = $helper->today();
+        $first = $helper->pick();
+        $second = $helper->pick();
 
         $this->assertSame($first, $second);
     }
