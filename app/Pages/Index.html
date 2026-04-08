@@ -3,43 +3,342 @@
 {{ section 'title' }}{{ $name }}{{ endsection }}
 
 {{ section 'content' }}
-<div class="py-24 text-center">
+
+<!--
+    Heartbeat badge — single dense monospace line at the very top.
+    The most useful single line on the page: framework + PHP + env +
+    db + debug. If anything in this row is wrong, you know in one glance.
+-->
+<div class="font-mono text-xs text-warm-gray dark:text-stone bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded px-4 py-2 inline-block mb-10">
+    Arcanum {{ Env::frameworkVersion() }}
+    <span class="text-light-sand dark:text-dark-sand mx-1">·</span>
+    PHP {{ Env::phpVersion() }}
+    <span class="text-light-sand dark:text-dark-sand mx-1">·</span>
+    env: {{ Env::appEnvironment() }}
+    <span class="text-light-sand dark:text-dark-sand mx-1">·</span>
+    db: {{ Env::databaseConnection() ?? 'none' }}
+    <span class="text-light-sand dark:text-dark-sand mx-1">·</span>
+    debug: {{ Env::debugMode() ? 'ON' : 'OFF' }}
+</div>
+
+<!--
+    Welcome banner — primary heading + tagline + replace-this hint.
+-->
+<div class="mb-12">
     <h1 class="font-heading text-5xl font-semibold text-ink dark:text-[#e8e4db] tracking-tight leading-tight m-0">
-        {{ $name }}
+        Welcome to {{ $name }}
     </h1>
-    <p class="text-lg text-warm-gray dark:text-stone mt-4 mb-12 max-w-prose mx-auto leading-relaxed">
-        {{ $message }}
+    <p class="text-lg text-warm-gray dark:text-stone mt-3 mb-2 max-w-prose leading-relaxed">
+        A CQRS PHP framework for building websites and services that stay readable as they grow.
     </p>
-    <div class="flex justify-center gap-4">
-        <a href="/health.html" class="inline-block px-5 py-2.5 border border-sand dark:border-dark-sand text-copper dark:text-copper-light font-medium text-[15px] rounded no-underline hover:bg-dust dark:hover:bg-dark-linen">
-            Health Check
+    <p class="text-sm text-stone dark:text-warm-gray font-mono m-0">
+        This page lives at <code class="bg-vellum dark:bg-dark-vellum px-1.5 py-0.5 rounded">app/Pages/Index.html</code> — replace it.
+    </p>
+</div>
+
+<!--
+    Today's incantation — rotating tip-of-the-day card.
+    Pulls from IncantationHelper::today() which returns
+    {title, body, code} and rotates daily by day-of-year.
+-->
+<div class="bg-vellum dark:bg-dark-vellum border-l-4 border-copper dark:border-copper-light rounded-r-lg p-6 mb-12">
+    <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">
+        Today's incantation
+    </div>
+    <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-2">
+        {{ Tip::today()['title'] }}
+    </h2>
+    <p class="text-warm-gray dark:text-stone text-[15px] m-0 mb-4 leading-relaxed">
+        {{ Tip::today()['body'] }}
+    </p>
+    {{ if Tip::today()['code'] }}
+    <pre class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-4 m-0 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>{{ Tip::today()['code'] }}</code></pre>
+    {{ endif }}
+</div>
+
+<!--
+    Diagnostics — two columns of green/yellow/red bullets.
+    Environment column on the left, application column on the right.
+    Each row uses a colored dot as the bullet, professional language,
+    no emoji. Renders accurately every request — no caching.
+-->
+<div class="grid md:grid-cols-2 gap-8 mb-12">
+
+    <!-- Environment column -->
+    <div>
+        <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
+            Environment
+        </h2>
+        <ul class="space-y-2 m-0 p-0 list-none">
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::phpVersionOk() ? 'bg-success' : 'bg-error' }}"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    PHP {{ Env::phpVersion() }}
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::phpVersionOk() ? 'meets the 8.4 minimum' : 'below the 8.4 minimum' }}</span>
+                </span>
+            </li>
+
+            {{ foreach Env::extensions() as $name => $loaded }}
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ $loaded ? 'bg-success' : 'bg-error' }}"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    ext-{{ $name }}
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ $loaded ? 'loaded' : 'missing' }}</span>
+                </span>
+            </li>
+            {{ endforeach }}
+
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::cacheWritable() ? 'bg-success' : 'bg-error' }}"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    files/cache
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::cacheWritable() ? 'writable' : 'not writable' }}</span>
+                </span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::logsWritable() ? 'bg-success' : 'bg-error' }}"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    files/logs
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::logsWritable() ? 'writable' : 'not writable' }}</span>
+                </span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::sessionsWritable() ? 'bg-success' : 'bg-warning' }}"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    files/sessions
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::sessionsWritable() ? 'writable' : 'not writable' }}</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Application column -->
+    <div>
+        <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
+            Application
+        </h2>
+        <ul class="space-y-2 m-0 p-0 list-none">
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 bg-info"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    Cache driver
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::cacheDriver() }}</span>
+                </span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 bg-info"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    Session driver
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::sessionDriver() ?? 'not configured' }}</span>
+                </span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::databaseConnection() ? 'bg-info' : 'bg-warning' }}"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    Database
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::databaseConnection() ?? 'not configured' }}</span>
+                </span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::cssBuilt() ? 'bg-success' : 'bg-warning' }}"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    CSS bundle
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::cssBuilt() ? 'built (production)' : 'CDN play script (development)' }}</span>
+                </span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="inline-block w-2 h-2 rounded-full mt-2 {{ Env::debugMode() ? 'bg-warning' : 'bg-success' }}"></span>
+                <span class="text-[15px] text-ink dark:text-[#e8e4db]">
+                    Debug mode
+                    <span class="text-warm-gray dark:text-stone text-sm">— {{ Env::debugMode() ? 'ON (verbose errors)' : 'OFF' }}</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--
+    What's wired up — small introspection panel.
+    Doubles as a smoke test: zero anywhere means discovery didn't run,
+    which is far more useful than a polished error page two clicks deeper.
+-->
+<div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 mb-12">
+    <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
+        What's wired up
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+        <div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::commands() }}</div>
+            <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">commands</div>
+        </div>
+        <div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::queries() }}</div>
+            <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">queries</div>
+        </div>
+        <div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::pages() }}</div>
+            <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">pages</div>
+        </div>
+        <div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::middleware() }}</div>
+            <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">middleware</div>
+        </div>
+        <div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::helpers() }}</div>
+            <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">helpers</div>
+        </div>
+    </div>
+</div>
+
+<!--
+    Why CQRS (not MVC) — two short paragraphs + tabbed code demo.
+    Tabs use radio inputs + Tailwind named peer modifiers, so they
+    work without JS. Each label clicks the matching radio; the
+    matching pre block uses peer-checked/<id>:block to show.
+-->
+<div class="border-t border-light-sand dark:border-dark-sand pt-12 mb-12">
+    <h2 class="font-heading text-2xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
+        Why CQRS instead of MVC?
+    </h2>
+    <div class="max-w-prose space-y-4 mb-8">
+        <p class="text-warm-gray dark:text-stone text-[15px] leading-relaxed m-0">
+            MVC controllers grow into junk drawers. Every new feature finds a
+            "natural home" alongside three unrelated actions, the file gets
+            longer, the dependencies multiply, and a year later you cannot
+            test one method without booting half the application.
+        </p>
+        <p class="text-warm-gray dark:text-stone text-[15px] leading-relaxed m-0">
+            CQRS keeps each operation small, named, and testable. Every read
+            is a Query, every write is a Command, each one is its own DTO with
+            its own handler — discovered by convention, validated by attribute,
+            dispatched through middleware. Handlers stay tiny because the
+            framework absorbs the ceremony.
+        </p>
+    </div>
+
+    <!-- CSS-only tabs: radio inputs + peer-checked siblings -->
+    <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg overflow-hidden">
+        <input type="radio" name="cqrs-demo" id="cqrs-q" checked class="hidden peer/q">
+        <input type="radio" name="cqrs-demo" id="cqrs-c" class="hidden peer/c">
+        <input type="radio" name="cqrs-demo" id="cqrs-p" class="hidden peer/p">
+
+        <div class="flex border-b border-light-sand dark:border-dark-sand">
+            <label for="cqrs-q" class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone peer-checked/q:text-copper peer-checked/q:dark:text-copper-light peer-checked/q:bg-parchment peer-checked/q:dark:bg-deep-parchment peer-checked/q:border-b-2 peer-checked/q:border-copper">Query</label>
+            <label for="cqrs-c" class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone peer-checked/c:text-copper peer-checked/c:dark:text-copper-light peer-checked/c:bg-parchment peer-checked/c:dark:bg-deep-parchment peer-checked/c:border-b-2 peer-checked/c:border-copper">Command</label>
+            <label for="cqrs-p" class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone peer-checked/p:text-copper peer-checked/p:dark:text-copper-light peer-checked/p:bg-parchment peer-checked/p:dark:bg-deep-parchment peer-checked/p:border-b-2 peer-checked/p:border-copper">Page</label>
+        </div>
+
+        <pre class="hidden peer-checked/q:block m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class Health {}
+
+final class HealthHandler
+{
+    public function __invoke(Health $q): array
+    {
+        return ['status' =&gt; 'ok'];
+    }
+}</code></pre>
+
+        <pre class="hidden peer-checked/c:block m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class SubscribeNewsletter
+{
+    public function __construct(
+        #[Email] public readonly string $email,
+    ) {}
+}
+
+final class SubscribeNewsletterHandler
+{
+    public function __invoke(SubscribeNewsletter $c): void
+    {
+        $this-&gt;subscribers-&gt;add($c-&gt;email);
+    }
+}</code></pre>
+
+        <pre class="hidden peer-checked/p:block m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>// app/Pages/About.php
+final class About
+{
+    public function __construct(
+        public readonly string $name = 'Arcanum',
+    ) {}
+}
+
+// app/Pages/About.html
+&lt;h1&gt;About {{ $name }}&lt;/h1&gt;</code></pre>
+    </div>
+</div>
+
+<!--
+    Your next 60 seconds / 10 minutes / 1 hour — three progressive
+    commitment cards. Each has a copy-to-clipboard affordance on its
+    primary action.
+-->
+<div class="grid md:grid-cols-3 gap-6 mb-12">
+
+    <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
+        <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">Next 60 seconds</div>
+        <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-3">Make a page</h3>
+        <p class="text-warm-gray dark:text-stone text-sm leading-relaxed mb-4 flex-1">
+            Run the scaffold, get a Page DTO, a template, and a route by convention.
+            Then visit it.
+        </p>
+        <div class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-3 font-code text-[12px] text-ink dark:text-[#e8e4db] flex items-center justify-between gap-3">
+            <code>php arcanum make:page Home</code>
+            <button data-copy="php arcanum make:page Home" class="text-copper dark:text-copper-light text-xs uppercase tracking-wider hover:underline shrink-0">Copy</button>
+        </div>
+    </div>
+
+    <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
+        <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">Next 10 minutes</div>
+        <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-3">Build a Query end-to-end</h3>
+        <p class="text-warm-gray dark:text-stone text-sm leading-relaxed mb-4 flex-1">
+            Scaffold a Query in your own domain. Add a constructor parameter or two,
+            return data from the handler, render it in the generated template. Visit
+            it as <code class="text-xs">.json</code>, <code class="text-xs">.html</code>, and <code class="text-xs">.csv</code> — same handler, three formats.
+        </p>
+        <div class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-3 font-code text-[12px] text-ink dark:text-[#e8e4db] flex items-center justify-between gap-3">
+            <code>php arcanum make:query Shop/Products</code>
+            <button data-copy="php arcanum make:query Shop/Products" class="text-copper dark:text-copper-light text-xs uppercase tracking-wider hover:underline shrink-0">Copy</button>
+        </div>
+    </div>
+
+    <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
+        <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">Next hour</div>
+        <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-3">Read the source</h3>
+        <p class="text-warm-gray dark:text-stone text-sm leading-relaxed mb-4 flex-1">
+            Each framework package has its own README — Cabinet, Codex, Flow, Atlas,
+            Shodo, Forge, Hourglass — describing the design and the intended use.
+            Start where the names are most curious.
+        </p>
+        <a href="https://github.com/arcanum-org/framework" class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-3 font-code text-[12px] text-copper dark:text-copper-light no-underline hover:bg-dust dark:hover:bg-dark-linen text-center">
+            github.com/arcanum-org/framework
         </a>
     </div>
 </div>
 
-<div class="border-t border-light-sand dark:border-dark-sand pt-12 mt-8">
-    <h2 class="font-heading text-2xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
-        How It Works
-    </h2>
-    <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6">
-            <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-2">Queries</h3>
-            <p class="text-warm-gray dark:text-stone text-sm m-0 leading-relaxed">
-                Read operations. A DTO defines input, a handler returns data, a template renders it.
-            </p>
-        </div>
-        <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6">
-            <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-2">Commands</h3>
-            <p class="text-warm-gray dark:text-stone text-sm m-0 leading-relaxed">
-                Write operations. Submit data, handler processes it, response is a status code.
-            </p>
-        </div>
-        <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6">
-            <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-2">Pages</h3>
-            <p class="text-warm-gray dark:text-stone text-sm m-0 leading-relaxed">
-                Template-driven routes. Optional DTO for defaults, no handler needed.
-            </p>
-        </div>
+<!--
+    Footer crumb — single understated line + ASCII rune in the corner.
+    The render duration is from EnvCheckHelper which reads
+    timeSince('request.received') on the framework Stopwatch.
+-->
+<div class="border-t border-light-sand dark:border-dark-sand pt-6 flex items-center justify-between text-xs text-stone dark:text-warm-gray font-mono">
+    <div>
+        This page rendered in {{ Env::renderDurationMs() ?? '?' }}ms.
+        You are request #{{ Env::requestCount() }} since boot.
     </div>
+    <div class="text-copper dark:text-copper-light text-2xl leading-none" aria-hidden="true">⌬</div>
 </div>
+
+<script>
+// Copy-to-clipboard wiring for [data-copy] buttons.
+// Fires the system clipboard write, swaps the button text to "Copied!"
+// for 1.5 seconds, restores. Vanilla JS, no dependencies.
+document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        navigator.clipboard.writeText(btn.getAttribute('data-copy'));
+        var original = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(function () { btn.textContent = original; }, 1500);
+    });
+});
+</script>
+
 {{ endsection }}
