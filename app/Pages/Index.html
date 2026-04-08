@@ -37,27 +37,6 @@
 </div>
 
 <!--
-    Incantation — rotating tip card.
-    Pulls from IncantationHelper::pick() which returns {title, body, code}.
-    A new tip is picked on every request and stays stable within one
-    render. Refresh the page to see another.
--->
-<div class="bg-vellum dark:bg-dark-vellum border-l-4 border-copper dark:border-copper-light rounded-r-lg p-6 mb-12">
-    <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">
-        Incantation <span class="text-stone dark:text-warm-gray normal-case tracking-normal ml-1">— refresh for another</span>
-    </div>
-    <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-2">
-        {{ Tip::pick()['title'] }}
-    </h2>
-    <p class="text-warm-gray dark:text-stone text-[15px] m-0 mb-4 leading-relaxed">
-        {{ Tip::pick()['body'] }}
-    </p>
-    {{ if Tip::pick()['code'] }}
-    <pre class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-4 m-0 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>{{ Tip::pick()['code'] }}</code></pre>
-    {{ endif }}
-</div>
-
-<!--
     Diagnostics — two columns of green/yellow/red bullets.
     Environment column on the left, application column on the right.
     Each row uses a colored dot as the bullet, professional language,
@@ -189,6 +168,29 @@
             <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">helpers</div>
         </div>
     </div>
+</div>
+
+<!--
+    Incantation — rotating tip card.
+    Pulls from IncantationHelper::pick() which returns {title, body, code}.
+    A new tip is picked on every request and stays stable within one
+    render. Refresh the page to see another. Sits below the diagnostics
+    intentionally — the must-see "is everything wired up" content stays
+    above the fold.
+-->
+<div class="bg-vellum dark:bg-dark-vellum border-l-4 border-copper dark:border-copper-light rounded-r-lg p-6 mb-12">
+    <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">
+        Incantation <span class="text-stone dark:text-warm-gray normal-case tracking-normal ml-1">— refresh for another</span>
+    </div>
+    <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-2">
+        {{ Tip::pick()['title'] }}
+    </h2>
+    <p class="text-warm-gray dark:text-stone text-[15px] m-0 mb-4 leading-relaxed">
+        {{ Tip::pick()['body'] }}
+    </p>
+    {{ if Tip::pick()['code'] }}
+    <pre class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-4 m-0 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>{{ Tip::pick()['code'] }}</code></pre>
+    {{ endif }}
 </div>
 
 <!--
