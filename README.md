@@ -108,7 +108,7 @@ app/
       Query/        # Read operations requiring auth
   Pages/            # Template-driven routes (Index)
   Templates/        # Shared layouts and partials
-    layout.html     # Base layout (Tailwind, HTMX, nav, footer)
+    layout.html     # Base layout (Tailwind, htmx, nav, footer)
     partials/       # Reusable fragments (nav.html, footer.html)
   Http/             # HTTP kernel and middleware
   Cli/              # CLI kernel
@@ -250,13 +250,13 @@ $closest = Strings::closestMatch($input, $available);
 // Returns the nearest match or null if nothing is close enough
 ```
 
-## Front-End: Tailwind CSS + HTMX
+## Front-End: Tailwind CSS + htmx
 
-The starter app ships with **Tailwind CSS** for styling and **HTMX** for interactivity — no build step required for development.
+The starter app ships with **Tailwind CSS** for styling and **htmx** for interactivity — no build step required for development.
 
 ### Development (zero-build)
 
-The base layout (`app/Templates/layout.html`) loads Tailwind via CDN play script and HTMX via CDN. Just start the server:
+The base layout (`app/Templates/layout.html`) loads Tailwind via CDN play script and htmx via CDN. Just start the server:
 
 ```bash
 php -S localhost:8000 -t public
@@ -288,9 +288,9 @@ Templates use `{{ }}` syntax with layout inheritance:
 
 Layouts live in `app/Templates/`. The `@extends` directive looks for the layout in the same directory as the child template first, then falls back to `app/Templates/`. Partials use `{{ @include 'partials/nav' }}`.
 
-### HTMX patterns with CQRS
+### htmx patterns with CQRS
 
-HTMX integrates naturally with Arcanum's CQRS model:
+htmx integrates naturally with Arcanum's CQRS model:
 
 - **Commands return 204** — use `hx-swap="none"` and trigger UI updates via events
 - **Queries return HTML fragments** — use `hx-get` to load data inline

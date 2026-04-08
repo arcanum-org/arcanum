@@ -11,11 +11,11 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * HTMX integration middleware.
+ * htmx integration middleware.
  *
  * - Detects HX-Request header and enables fragment rendering (layout-less
  *   HTML output for partial swaps).
- * - Copies Location headers to HX-Location so HTMX follows redirects
+ * - Copies Location headers to HX-Location so htmx follows redirects
  *   automatically (e.g., after a command returns 201 Created + Location).
  */
 final class Htmx implements MiddlewareInterface
