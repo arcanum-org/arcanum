@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../arcanum-org/framework",
-                "reference": "cf4a7d6eafc165aaf6c31e6cd9dd2a3ec2ea7d34"
+                "reference": "41219e593529a540c4ecd94c243ec5b42a0eb7bc"
             },
             "require": {
                 "monolog/monolog": "^3.4",

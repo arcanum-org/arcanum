@@ -9,6 +9,7 @@ use App\Http\Listener\RequestCounter;
 use App\Test\Http\Listener\InMemoryCache;
 use Arcanum\Gather\Configuration;
 use Arcanum\Hourglass\Stopwatch;
+use Arcanum\Testing\TestKernel;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
@@ -256,7 +257,7 @@ final class EnvCheckHelperTest extends TestCase
     ): EnvCheckHelper {
         return new EnvCheckHelper(
             config: $config ?? new Configuration([]),
-            kernel: new FixtureKernel($this->tmpRoot),
+            kernel: new TestKernel(rootDirectory: $this->tmpRoot),
             stopwatch: $stopwatch ?? new Stopwatch(),
             cache: $cache ?? new InMemoryCache(),
         );

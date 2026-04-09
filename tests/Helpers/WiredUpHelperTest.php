@@ -8,6 +8,7 @@ use App\Helpers\WiredUpHelper;
 use Arcanum\Atlas\MiddlewareDiscovery;
 use Arcanum\Atlas\PageDiscovery;
 use Arcanum\Shodo\HelperRegistry;
+use Arcanum\Testing\TestKernel;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
@@ -142,7 +143,7 @@ final class WiredUpHelperTest extends TestCase
         }
 
         return new WiredUpHelper(
-            kernel: new FixtureKernel($rootDirectory ?? $this->tmpRoot),
+            kernel: new TestKernel(rootDirectory: $rootDirectory ?? $this->tmpRoot),
             pages: $pageDiscovery ?? new PageDiscovery(
                 namespace: 'App\\Pages',
                 directory: $emptyDir,
