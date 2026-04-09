@@ -231,6 +231,7 @@
     <form
         hx-post="/guestbook/add-entry"
         hx-swap="none"
+        hx-on::after-request="if(event.detail.successful) this.reset()"
         class="flex flex-col gap-3 mb-6"
     >
         {{ csrf }}
