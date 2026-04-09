@@ -229,9 +229,9 @@
     </h2>
 
     <form
+        id="guestbook-form"
         hx-post="/guestbook/add-entry"
         hx-swap="none"
-        hx-on-htmx-after-request="if(event.detail.successful) this.reset()"
         class="flex flex-col gap-3 mb-6"
     >
         {{ csrf }}
@@ -265,6 +265,13 @@
     >
         <p class="text-stone dark:text-warm-gray text-sm italic m-0">Loading...</p>
     </div>
+
+    <script>
+    document.body.addEventListener('entry-added', function() {
+        var form = document.getElementById('guestbook-form');
+        if (form) form.reset();
+    });
+    </script>
 </div>
 
 <!--
