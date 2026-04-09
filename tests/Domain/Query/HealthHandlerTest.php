@@ -6,6 +6,7 @@ namespace App\Test\Domain\Query;
 
 use App\Domain\Query\Health;
 use App\Domain\Query\HealthHandler;
+use Arcanum\Hourglass\FrozenClock;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -57,5 +58,22 @@ final class HealthHandlerTest extends TestCase
 
         // Assert
         $this->assertSame(['status' => 'ok'], $result);
+    }
+
+    public function testVerboseTimestampComesFromInjectedClock(): void
+    {
+        // Arrange — pin the clock so the timestamp is deterministic.
+        $clock = new FrozenClock(new \DateTimeImmutable('2026-04-08 12:00:00'));
+        $query = new Health(verbose: true);
+        $handler = new HealthHandler($clock);
+
+        // Act
+        $result = $handler($query);
+
+        // Assert — timestamp matches the frozen clock exactly.
+        $this->assertSame(
+            $clock->now()->getTimestamp(),
+            $result['timestamp'],
+        );
     }
 }
