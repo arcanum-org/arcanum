@@ -1,4 +1,7 @@
-<div id="guestbook-list">
+<div id="guestbook-list"
+     hx-get="/guestbook/get-entries.html"
+     hx-trigger="entry-added from:body"
+     hx-swap="outerHTML">
     {{ if $entries }}
     <ul class="space-y-3 m-0 p-0 list-none">
         {{ foreach $entries as $entry }}
