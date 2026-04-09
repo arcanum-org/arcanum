@@ -11,7 +11,7 @@ use Arcanum\Htmx\ClientBroadcast;
  *
  * Implements ClientBroadcast so the HtmxEventTriggerMiddleware
  * projects it as an HX-Trigger header — any element listening
- * for "entry-added" via hx-trigger="entry-added from:body"
+ * for "guestbook:entry:added" via hx-trigger="entry-added from:body"
  * will refresh automatically.
  */
 final readonly class EntryAdded implements ClientBroadcast
@@ -23,7 +23,7 @@ final readonly class EntryAdded implements ClientBroadcast
 
     public function eventName(): string
     {
-        return 'entry-added';
+        return 'guestbook:entry:added';
     }
 
     public function payload(): array

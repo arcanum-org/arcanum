@@ -221,7 +221,7 @@
     Guestbook — live htmx demo.
     Form posts to the AddEntry command. On success, the EntryAdded
     event fires as a ClientBroadcast, projecting an HX-Trigger header.
-    The entry list listens for "entry-added" and re-fetches.
+    The entry list listens for "guestbook:entry:added" and re-fetches.
 -->
 <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 mb-12">
     <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
@@ -232,7 +232,7 @@
         id="guestbook-form"
         hx-post="/guestbook/add-entry"
         hx-swap="none"
-        hx-on:entry-added="this.reset()"
+        hx-on:guestbook:entry:added="this.reset()"
         class="flex flex-col gap-3 mb-6"
     >
         {{ csrf }}
@@ -261,7 +261,7 @@
     <div
         id="guestbook-list"
         hx-get="/guestbook/get-entries.html"
-        hx-trigger="load, entry-added from:body"
+        hx-trigger="load, guestbook:entry:added from:body"
         hx-swap="outerHTML"
     >
         <p class="text-stone dark:text-warm-gray text-sm italic m-0">Loading...</p>
