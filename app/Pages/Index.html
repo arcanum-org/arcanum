@@ -218,6 +218,55 @@
 </div>
 
 <!--
+    Guestbook — live htmx demo.
+    Form posts to the AddEntry command. On success, the EntryAdded
+    event fires as a ClientBroadcast, projecting an HX-Trigger header.
+    The entry list listens for "entry-added" and re-fetches.
+-->
+<div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 mb-12">
+    <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
+        Guestbook
+    </h2>
+
+    <form
+        hx-post="/guestbook/add-entry"
+        hx-swap="none"
+        class="flex flex-col gap-3 mb-6"
+    >
+        {{ csrf }}
+        <div class="flex gap-3">
+            <input
+                type="text"
+                name="name"
+                placeholder="Your name"
+                required
+                class="flex-1 bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded px-3 py-2 text-sm text-ink dark:text-[#e8e4db] placeholder-stone"
+            >
+            <button
+                type="submit"
+                class="bg-copper text-parchment px-4 py-2 rounded text-sm font-medium hover:bg-copper-dark"
+            >Sign</button>
+        </div>
+        <textarea
+            name="message"
+            placeholder="Leave a message..."
+            required
+            rows="2"
+            class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded px-3 py-2 text-sm text-ink dark:text-[#e8e4db] placeholder-stone resize-none"
+        ></textarea>
+    </form>
+
+    <div
+        id="guestbook-list"
+        hx-get="/guestbook/get-entries.html"
+        hx-trigger="load, entry-added from:body"
+        hx-swap="outerHTML"
+    >
+        <p class="text-stone dark:text-warm-gray text-sm italic m-0">Loading...</p>
+    </div>
+</div>
+
+<!--
     Why CQRS (not MVC) — two short paragraphs + tabbed code demo.
     Tabs use radio inputs + Tailwind named peer modifiers, so they
     work without JS. Each label clicks the matching radio; the

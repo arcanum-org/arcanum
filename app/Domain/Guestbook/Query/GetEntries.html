@@ -1,0 +1,17 @@
+<div id="guestbook-list">
+    {{ if $entries }}
+    <ul class="space-y-3 m-0 p-0 list-none">
+        {{ foreach $entries as $entry }}
+        <li class="border-b border-light-sand dark:border-dark-sand pb-3">
+            <div class="flex items-baseline justify-between gap-3">
+                <span class="font-medium text-ink dark:text-[#e8e4db] text-sm">{{ $entry['name'] }}</span>
+                <span class="text-xs text-stone dark:text-warm-gray">{{ $entry['created_at'] }}</span>
+            </div>
+            <p class="text-warm-gray dark:text-stone text-sm m-0 mt-1">{{ $entry['message'] }}</p>
+        </li>
+        {{ endforeach }}
+    </ul>
+    {{ else }}
+    <p class="text-stone dark:text-warm-gray text-sm italic m-0">No entries yet. Be the first!</p>
+    {{ endif }}
+</div>
