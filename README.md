@@ -106,6 +106,11 @@ app/
     Query/          # Root-level queries (Health)
     Auth/           # Auth examples (Whoami, AdminOnly)
       Query/        # Read operations requiring auth
+    Guestbook/      # Guestbook demo (htmx + ClientBroadcast events)
+      Command/      # AddEntry command + handler
+      Query/        # GetEntries query + handler + template
+      Event/        # EntryAdded (ClientBroadcast)
+      Model/        # Forge SQL model
   Pages/            # Template-driven routes (Index)
   Templates/        # Shared layouts and partials
     layout.html     # Base layout (Tailwind, htmx, nav, footer)
@@ -120,8 +125,9 @@ config/
   cache.php         # Cache drivers
   cors.php          # CORS policy
   formats.php       # Response formats and default (html)
+  htmx.php          # htmx version pin, CDN URL, CSRF, auth redirect
   log.php           # Logging handlers and channels
-  middleware.php    # Global HTTP middleware (Cors, Htmx)
+  middleware.php    # Global HTTP middleware (Cors, RateLimit, Htmx)
   routes.php        # Custom route overrides
 
 public/
@@ -256,7 +262,7 @@ The starter app ships with **Tailwind CSS** for styling and **htmx** for interac
 
 ### Development (zero-build)
 
-The base layout (`app/Templates/layout.html`) loads Tailwind via CDN play script and htmx via CDN. Just start the server:
+The base layout (`app/Templates/layout.html`) loads Tailwind via CDN play script and htmx via `{{ Htmx::script() }}` (which pulls the pinned version from `config/htmx.php`). Just start the server:
 
 ```bash
 php -S localhost:8000 -t public
@@ -277,33 +283,36 @@ Dark mode uses Tailwind's `class` strategy with a toggle in the nav bar. It pers
 Templates use `{{ }}` syntax with layout inheritance:
 
 ```html
-{{ @extends 'layout' }}
+{{ extends 'layout' }}
 
-{{ @section 'title' }}My Page{{ @endsection }}
+{{ section 'title' }}My Page{{ endsection }}
 
-{{ @section 'content' }}
+{{ section 'content' }}
 <h1>{{ $title }}</h1>
-{{ @endsection }}
+{{ endsection }}
 ```
 
-Layouts live in `app/Templates/`. The `@extends` directive looks for the layout in the same directory as the child template first, then falls back to `app/Templates/`. Partials use `{{ @include 'partials/nav' }}`.
+Layouts live in `app/Templates/`. The `extends` directive looks for the layout in the same directory as the child template first, then falls back to `app/Templates/`. Partials use `{{ include 'partials/nav' }}`.
 
-### htmx patterns with CQRS
+### htmx integration
 
-htmx integrates naturally with Arcanum's CQRS model:
+The framework's `Arcanum\Htmx` package provides first-class htmx 4 support. The starter app registers three middleware in `config/middleware.php` — `HtmxRequestMiddleware`, `HtmxEventTriggerMiddleware`, and `HtmxAuthRedirectMiddleware` — and the layout includes `Htmx::script()` for the CDN script and `Htmx::csrf()` for automatic CSRF token injection.
 
-- **Commands return 204** — use `hx-swap="none"` and trigger UI updates via events
-- **Queries return HTML fragments** — use `hx-get` to load data inline
-- **HtmxMiddleware** — copies `Location` headers to `HX-Location` for redirects, enables fragment rendering (layout-less output for partial swaps)
+The htmx version is pinned in `config/htmx.php` (currently `4.0.0-beta1`). To bump it, change the `version` key and update the `integrity` hash if you use SRI.
 
-Example pattern:
-```html
-<form hx-post="/orders/place" hx-swap="none"
-      hx-on::after-request="if(event.detail.successful) { ... }">
+**How rendering works.** Your handlers always return the same data. On a normal browser request, the framework renders the full page with the layout. On an htmx partial request (with `HX-Target`), the framework automatically extracts just the target element from the template and returns it. No special handler logic needed.
 
-<div hx-get="/orders/list.html" hx-trigger="load, refresh"
-     hx-swap="innerHTML">
-```
+**The guestbook demo** (`app/Domain/Guestbook/`) shows all of this in action:
+
+- `GetEntries` query returns a list of guestbook entries. The template wraps the list in `<div id="guestbook-list">` with `hx-trigger="guestbook:entry:added from:body"` so it auto-refreshes when a new entry is added.
+- `AddEntry` command validates the input (via `#[NotEmpty]`, `#[MinLength]`, `#[MaxLength]` attributes), inserts the entry, and dispatches an `EntryAdded` event.
+- `EntryAdded` implements `ClientBroadcast`, so the framework automatically adds it as an `HX-Trigger` response header. The guestbook list element hears the event and re-fetches itself.
+
+This is the CQRS + htmx pattern: commands dispatch domain events, events project as `HX-Trigger` headers, and listening elements refresh themselves. No JavaScript coordination required.
+
+The welcome page also demonstrates element extraction with the incantation card refresh button and per-row diagnostic re-check buttons — each targets a specific `id` and the framework returns just that element.
+
+See `src/Htmx/README.md` in the framework repo for the full package reference.
 
 ### Production build
 
