@@ -243,33 +243,19 @@
         </p>
     </div>
 
-    <!-- Tabbed code demo — htmx-loaded on first click, cached after -->
+    <!-- CSS-only tabs: radio inputs + peer-checked siblings -->
     <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg overflow-hidden">
+        <input type="radio" name="cqrs-demo" id="cqrs-q" checked class="hidden peer/q">
+        <input type="radio" name="cqrs-demo" id="cqrs-c" class="hidden peer/c">
+        <input type="radio" name="cqrs-demo" id="cqrs-p" class="hidden peer/p">
+
         <div class="flex border-b border-light-sand dark:border-dark-sand">
-            <button
-                class="px-5 py-3 text-sm font-medium cursor-pointer text-copper dark:text-copper-light bg-parchment dark:bg-deep-parchment border-b-2 border-copper"
-                hx-get="/"
-                hx-target="#cqrs-tab-query"
-                hx-swap="outerHTML"
-                hx-trigger="click once"
-            >Query</button>
-            <button
-                class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone"
-                hx-get="/"
-                hx-target="#cqrs-tab-command"
-                hx-swap="outerHTML"
-                hx-trigger="click once"
-            >Command</button>
-            <button
-                class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone"
-                hx-get="/"
-                hx-target="#cqrs-tab-page"
-                hx-swap="outerHTML"
-                hx-trigger="click once"
-            >Page</button>
+            <label for="cqrs-q" class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone peer-checked/q:text-copper peer-checked/q:dark:text-copper-light peer-checked/q:bg-parchment peer-checked/q:dark:bg-deep-parchment peer-checked/q:border-b-2 peer-checked/q:border-copper">Query</label>
+            <label for="cqrs-c" class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone peer-checked/c:text-copper peer-checked/c:dark:text-copper-light peer-checked/c:bg-parchment peer-checked/c:dark:bg-deep-parchment peer-checked/c:border-b-2 peer-checked/c:border-copper">Command</label>
+            <label for="cqrs-p" class="px-5 py-3 text-sm font-medium cursor-pointer text-warm-gray dark:text-stone peer-checked/p:text-copper peer-checked/p:dark:text-copper-light peer-checked/p:bg-parchment peer-checked/p:dark:bg-deep-parchment peer-checked/p:border-b-2 peer-checked/p:border-copper">Page</label>
         </div>
 
-        <pre id="cqrs-tab-query" class="m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class Health
+        <pre class="hidden peer-checked/q:block m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class Health
 {
     public function __construct(
         public readonly bool $verbose = false,
@@ -288,7 +274,7 @@ final class HealthHandler
     }
 }</code></pre>
 
-        <pre id="cqrs-tab-command" class="hidden m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class SubscribeNewsletter
+        <pre class="hidden peer-checked/c:block m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class SubscribeNewsletter
 {
     public function __construct(
         #[Email] public readonly string $email,
@@ -307,7 +293,7 @@ final class SubscribeNewsletterHandler
     }
 }</code></pre>
 
-        <pre id="cqrs-tab-page" class="hidden m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>// app/Pages/About.php
+        <pre class="hidden peer-checked/p:block m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>// app/Pages/About.php
 final class About
 {
     public function __construct(
