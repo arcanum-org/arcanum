@@ -6,6 +6,7 @@ A CQRS application built on the [Arcanum framework](https://github.com/arcanum-o
 
 ```bash
 composer install
+php bin/arcanum migrate
 php -S localhost:8000 -t public
 ```
 
