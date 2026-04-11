@@ -1,7 +1,7 @@
 <form
     id="guestbook-form"
     hx-post="/guestbook/add-entry"
-    hx-swap="morph:outerHTML"
+    hx-swap="outerMorph"
     hx-on:guestbook:entry:added="this.reset()"
     class="flex flex-col gap-3 mb-6"
 >

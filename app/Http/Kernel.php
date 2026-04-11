@@ -44,16 +44,6 @@ final class Kernel extends HyperKernel
         // Resolve the request to a Route
         $route = $router->resolve($request);
 
-        // Tell the error renderer which DTO we're dispatching so it can
-        // find co-located status-specific templates (e.g., AddEntry.422.html).
-        if ($this->container->has(\Arcanum\Hyper\HtmlExceptionResponseRenderer::class)) {
-            /** @var \Arcanum\Hyper\HtmlExceptionResponseRenderer $excRenderer */
-            $excRenderer = $this->container->get(
-                \Arcanum\Hyper\HtmlExceptionResponseRenderer::class,
-            );
-            $excRenderer->setDtoClass($route->dtoClass);
-        }
-
         // Wrap the core dispatch logic in per-route HTTP middleware.
         // This allows HTTP-layer middleware (auth, rate limiting) to
         // short-circuit before hydration or handler execution.
