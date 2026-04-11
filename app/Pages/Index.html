@@ -222,12 +222,14 @@
     Form posts to the AddEntry command. On success, the EntryAdded
     event fires as a ClientBroadcast, projecting an HX-Trigger header.
     The entry list listens for "guestbook:entry:added" and re-fetches.
+    Degrades gracefully when the database is not configured.
 -->
 <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 mb-12">
     <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
         Guestbook
     </h2>
 
+    {{ if Env::databaseConnection() }}
     {{ include 'Guestbook/_entry-form' }}
 
     <div
@@ -238,6 +240,13 @@
     >
         <p class="text-stone dark:text-warm-gray text-sm italic m-0">Loading...</p>
     </div>
+    {{ else }}
+    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded p-4">
+        <p class="text-sm text-yellow-800 dark:text-yellow-300 m-0 mb-2 font-medium">Database required</p>
+        <p class="text-sm text-yellow-700 dark:text-yellow-400 m-0 mb-3">The guestbook demo needs a database connection. Add a connection in <code class="text-[13px] font-code">config/database.php</code> and run the migration:</p>
+        <pre class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-3 m-0 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>php bin/arcanum migrate</code></pre>
+    </div>
+    {{ endif }}
 </div>
 
 <!--

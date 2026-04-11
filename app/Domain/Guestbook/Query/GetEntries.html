@@ -2,7 +2,18 @@
      hx-get="/guestbook/get-entries.html"
      hx-trigger="guestbook:entry:added from:body"
      hx-swap="outerHTML">
-    {{ if $entries }}
+    {{ if isset($error) && $error === 'migrate' }}
+    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded p-4">
+        <p class="text-sm text-yellow-800 dark:text-yellow-300 m-0 mb-2 font-medium">Database table missing</p>
+        <p class="text-sm text-yellow-700 dark:text-yellow-400 m-0 mb-3">The guestbook table hasn't been created yet. Run the migration to set it up:</p>
+        <pre class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-3 m-0 text-[13px] font-code text-ink dark:text-[#e8e4db]"><code>php bin/arcanum migrate</code></pre>
+    </div>
+    {{ elseif isset($error) }}
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded p-4">
+        <p class="text-sm text-red-800 dark:text-red-300 m-0 mb-2 font-medium">Database error</p>
+        <p class="text-sm text-red-700 dark:text-red-400 m-0">Could not connect to the database. Check your <code class="text-[13px] font-code">config/database.php</code> configuration.</p>
+    </div>
+    {{ elseif $entries }}
     <ul class="space-y-3 m-0 p-0 list-none">
         {{ foreach $entries as $entry }}
         <li class="border-b border-light-sand dark:border-dark-sand pb-3">

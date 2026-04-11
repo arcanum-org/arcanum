@@ -14,12 +14,23 @@ final class GetEntriesHandler
     }
 
     /**
-     * @return array{entries: list<array<string, mixed>>}
+     * @return array{entries?: list<array<string, mixed>>, error?: string}
      */
     public function __invoke(GetEntries $query): array
     {
-        $entries = $this->guestbook->allEntries()->toSeries()->all();
+        try {
+            $entries = $this->guestbook->allEntries()->toSeries()->all();
 
-        return ['entries' => $entries];
+            return ['entries' => $entries];
+        } catch (\PDOException $e) {
+            if (
+                str_contains($e->getMessage(), 'no such table')
+                || str_contains($e->getMessage(), "doesn't exist")
+            ) {
+                return ['error' => 'migrate'];
+            }
+
+            return ['error' => 'connection'];
+        }
     }
 }
