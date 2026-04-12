@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "arcanum-org/framework",
-            "version": "dev-claude-bang",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "../../arcanum-org/framework",
-                "reference": "6b239df9aa4ea71cc46a1108840535e998a87f6e"
+                "reference": "d5f560cea78786dd37054b39981ab591d19a64cd"
             },
             "require": {
                 "monolog/monolog": "^3.4",

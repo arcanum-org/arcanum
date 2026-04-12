@@ -32,6 +32,21 @@ final class AppHelper
     }
 
     /**
+     * The installed framework version from Composer.
+     */
+    public function version(): string
+    {
+        $installed = $this->publicDirectory . '/../vendor/composer/installed.php';
+        if (!file_exists($installed)) {
+            return 'dev';
+        }
+
+        /** @var array{versions: array<string, array{pretty_version?: string}>} */
+        $data = require $installed;
+        return $data['versions']['arcanum-org/framework']['pretty_version'] ?? 'dev';
+    }
+
+    /**
      * Render the CSS tags for the layout.
      *
      * In production (when the built CSS bundle exists at

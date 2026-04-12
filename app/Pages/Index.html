@@ -1,34 +1,91 @@
 {{ extends 'layout' }}
 
-{{ section 'title' }}{{ $name }}{{ endsection }}
+{{ section 'title' }}Welcome{{ endsection }}
 
 {{ section 'content' }}
 
 <!--
-    Heartbeat badge — single dense monospace line at the very top.
-    The most useful single line on the page: framework + PHP + env +
-    db + debug. If anything in this row is wrong, you know in one glance.
+    Ambient styles — shimmer, transitions, ornaments.
+    Kept in the page template since these are welcome-page-only flourishes.
 -->
-<div class="font-mono text-xs text-warm-gray dark:text-stone bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded px-4 py-2 inline-block mb-10">
+<style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes countUp {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+        animation: fadeInUp 0.6s ease-out both;
+    }
+    .fade-in-1 { animation-delay: 0.1s; }
+    .fade-in-2 { animation-delay: 0.2s; }
+    .fade-in-3 { animation-delay: 0.35s; }
+    .fade-in-4 { animation-delay: 0.5s; }
+    .count-pop {
+        animation: countUp 0.5s ease-out both;
+    }
+    .action-card {
+        transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+    }
+    .action-card:hover {
+        border-color: #b5623f;
+        transform: translateY(-2px);
+    }
+    .dark .action-card:hover {
+        border-color: #c8795a;
+    }
+    .ornament {
+        user-select: none;
+    }
+    .section-break {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        user-select: none;
+    }
+    .section-break::before,
+    .section-break::after {
+        content: '';
+        flex: 0 0 40px;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.5;
+    }
+</style>
+
+<!--
+    Heartbeat badge — single dense monospace line.
+-->
+<div class="font-mono text-xs text-warm-gray dark:text-stone bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded px-4 py-2 inline-block mb-10 fade-in">
     Arcanum {{ Env::frameworkVersion() }}
-    <span class="text-light-sand dark:text-dark-sand mx-1">·</span>
+    <span class="text-light-sand dark:text-dark-sand mx-1">&middot;</span>
     PHP {{ Env::phpVersion() }}
-    <span class="text-light-sand dark:text-dark-sand mx-1">·</span>
+    <span class="text-light-sand dark:text-dark-sand mx-1">&middot;</span>
     env: {{ Env::appEnvironment() }}
-    <span class="text-light-sand dark:text-dark-sand mx-1">·</span>
+    <span class="text-light-sand dark:text-dark-sand mx-1">&middot;</span>
     db: {{ Env::databaseConnection() ?? 'none' }}
-    <span class="text-light-sand dark:text-dark-sand mx-1">·</span>
+    <span class="text-light-sand dark:text-dark-sand mx-1">&middot;</span>
     debug: {{ Env::debugMode() ? 'ON' : 'OFF' }}
 </div>
 
 <!--
-    Welcome banner — primary heading + tagline + replace-this hint.
+    Welcome banner — SVG logo with shimmer + illuminated tagline.
 -->
-<div class="mb-12">
-    <h1 class="font-heading text-5xl font-semibold text-ink dark:text-[#e8e4db] tracking-tight leading-tight m-0">
-        Welcome to {{ $name }}
+<div class="mb-16 fade-in fade-in-1">
+    <h1 class="m-0 leading-tight relative">
+        <svg viewBox="0 0 900 120" class="h-14 md:h-16 w-auto" aria-label="Arcanum" role="img">
+            <!-- Rune "A" symbol -->
+            <g transform="translate(0, -5) scale(0.160)">
+                <path d="M755.738,663.193c-129.533,0.145 -257.284,0.009 -385.034,0.359c-12.827,0.035 -20.846,-2.429 -27.951,-15.079c-35.863,-63.846 -73.206,-126.861 -111.328,-192.4c-20.702,36.356 -40.542,71.198 -62.768,110.231c23.943,0 45.009,1.404 65.786,-0.445c16.583,-1.475 25.254,5.209 32.475,18.824c13.498,25.452 28.128,50.303 43.2,77.022l-310.117,0c76.728,-134.946 151.986,-267.306 229.542,-403.71c51.262,88.577 100.454,173.577 151.704,262.134c50.181,-88.12 98.541,-173.043 148.959,-261.579c21.61,36.737 41.629,70.212 61.112,103.996c55.269,95.837 110.369,191.771 165.246,287.832c1.898,3.322 0.707,8.408 -0.826,12.814m-200.176,-162.74c-8.091,-13.756 -16.182,-27.512 -25.478,-43.318c-21.453,37.513 -41.006,71.704 -62.045,108.494l124.875,0c-12.601,-22.313 -24.028,-42.547 -37.352,-65.176Z" class="fill-[#9c5a3a] dark:fill-[#c8795a]" />
+                <path d="M342.923,262.53c-11.4,19.562 -21.988,37.812 -34.67,59.668c-19.121,-33.274 -36.602,-63.358 -53.554,-93.737c-1.601,-2.868 -1.214,-8.348 0.49,-11.339c40.63,-71.286 81.567,-142.398 124.505,-217.122c22.562,38.326 42.829,72.562 62.904,106.91c19.855,33.97 39.902,67.841 58.901,102.286c3.36,6.091 5.196,16.474 2.282,21.997c-15.662,29.684 -33.049,58.458 -51.801,90.945c-24.209,-41.479 -47.13,-80.752 -71.863,-123.129c-13.197,22.564 -24.79,42.386 -37.194,63.52Z" class="fill-[#9c5a3a] dark:fill-[#c8795a]" />
+            </g>
+            <text x="128" y="100" font-family="Lora, Georgia, 'Times New Roman', serif" font-size="165" font-weight="600" letter-spacing="-1.5" class="fill-[#9c5a3a] dark:fill-[#c8795a]">rcanum</text>
+        </svg>
     </h1>
-    <p class="text-lg text-warm-gray dark:text-stone mt-3 mb-2 max-w-prose leading-relaxed">
+    <p class="text-lg text-warm-gray dark:text-stone mt-4 mb-2 max-w-prose leading-relaxed">
         A CQRS PHP framework for building websites and services that stay readable as they grow.
     </p>
     <p class="text-sm text-stone dark:text-warm-gray font-mono m-0">
@@ -37,12 +94,14 @@
 </div>
 
 <!--
-    Diagnostics — two columns of green/yellow/red bullets.
-    Environment column on the left, application column on the right.
-    Each row uses a colored dot as the bullet, professional language,
-    no emoji. Renders accurately every request — no caching.
+    Ornamental divider — manuscript flourish.
 -->
-<div class="grid md:grid-cols-2 gap-8 mb-12">
+<div class="justify-center mb-12 section-break text-light-sand dark:text-dark-sand text-lg" aria-hidden="true">&#8258;</div>
+
+<!--
+    Diagnostics — two columns of green/yellow/red bullets.
+-->
+<div class="grid md:grid-cols-2 gap-8 mb-12 fade-in fade-in-2">
 
     <!-- Environment column -->
     <div id="diag-environment">
@@ -154,47 +213,40 @@
 </div>
 
 <!--
-    What's wired up — small introspection panel.
-    Doubles as a smoke test: zero anywhere means discovery didn't run,
-    which is far more useful than a polished error page two clicks deeper.
+    What's wired up — animated counters.
 -->
-<div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 mb-12">
+<div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 mb-12 fade-in fade-in-3">
     <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
         What's wired up
     </h2>
     <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
         <div>
-            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::commands() }}</div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none count-pop" data-count="{{ Wired::commands() }}">0</div>
             <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">commands</div>
         </div>
         <div>
-            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::queries() }}</div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none count-pop" data-count="{{ Wired::queries() }}">0</div>
             <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">queries</div>
         </div>
         <div>
-            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::pages() }}</div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none count-pop" data-count="{{ Wired::pages() }}">0</div>
             <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">pages</div>
         </div>
         <div>
-            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::middleware() }}</div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none count-pop" data-count="{{ Wired::middleware() }}">0</div>
             <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">middleware</div>
         </div>
         <div>
-            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none">{{ Wired::helpers() }}</div>
+            <div class="font-heading text-3xl font-semibold text-copper dark:text-copper-light leading-none count-pop" data-count="{{ Wired::helpers() }}">0</div>
             <div class="text-xs uppercase tracking-wider text-warm-gray dark:text-stone mt-1">helpers</div>
         </div>
     </div>
 </div>
 
 <!--
-    Incantation — rotating tip card.
-    Pulls from IncantationHelper::pick() which returns {title, body, code}.
-    A new tip is picked on every request and stays stable within one
-    render. Refresh the page to see another. Sits below the diagnostics
-    intentionally — the must-see "is everything wired up" content stays
-    above the fold.
+    Incantation — rotating tip card with manuscript feel.
 -->
-<div id="incantation" class="bg-vellum dark:bg-dark-vellum border-l-4 border-copper dark:border-copper-light rounded-r-lg p-6 mb-12">
+<div id="incantation" class="bg-vellum dark:bg-dark-vellum border-l-4 border-copper dark:border-copper-light rounded-r-lg p-6 mb-12 fade-in fade-in-4">
     <div class="flex items-center justify-between mb-2">
         <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium">
             Incantation
@@ -215,14 +267,11 @@
     {{ if Tip::pick()['code'] }}
     <pre class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-4 m-0 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>{{ Tip::pick()['code'] }}</code></pre>
     {{ endif }}
+
 </div>
 
 <!--
     Guestbook — live htmx demo.
-    Form posts to the AddEntry command. On success, the EntryAdded
-    event fires as a ClientBroadcast, projecting an HX-Trigger header.
-    The entry list listens for "guestbook:entry:added" and re-fetches.
-    Degrades gracefully when the database is not configured.
 -->
 <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 mb-12">
     <h2 class="font-heading text-xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
@@ -250,12 +299,14 @@
 </div>
 
 <!--
-    Why CQRS (not MVC) — two short paragraphs + tabbed code demo.
-    Tabs use radio inputs + Tailwind named peer modifiers, so they
-    work without JS. Each label clicks the matching radio; the
-    matching pre block uses peer-checked/<id>:block to show.
+    Ornamental divider.
 -->
-<div class="border-t border-light-sand dark:border-dark-sand pt-12 mb-12">
+<div class="justify-center mb-12 section-break text-light-sand dark:text-dark-sand text-lg" aria-hidden="true">&#8258;</div>
+
+<!--
+    Why CQRS (not MVC) — two short paragraphs + tabbed code demo.
+-->
+<div class="mb-12">
     <h2 class="font-heading text-2xl font-semibold text-ink dark:text-[#e8e4db] m-0 mb-4">
         Why CQRS instead of MVC?
     </h2>
@@ -275,9 +326,7 @@
         </p>
     </div>
 
-    <!-- CSS-only tabs: radio inputs, labels, and content panels are all
-         direct siblings so Tailwind's peer-checked/name variant works.
-         CSS grid places labels in a row (first row) and content below. -->
+    <!-- CSS-only tabs -->
     <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg overflow-hidden grid grid-cols-3" style="grid-template-rows: auto 1fr;">
         <input type="radio" name="cqrs-demo" id="cqrs-q" checked class="hidden peer/q">
         <input type="radio" name="cqrs-demo" id="cqrs-c" class="hidden peer/c">
@@ -287,7 +336,7 @@
         <label for="cqrs-c" class="row-start-1 col-start-2 px-5 py-3 text-sm font-medium cursor-pointer border-b border-light-sand dark:border-dark-sand text-warm-gray dark:text-stone peer-checked/c:text-copper peer-checked/c:dark:text-copper-light peer-checked/c:bg-parchment peer-checked/c:dark:bg-deep-parchment peer-checked/c:border-b-2 peer-checked/c:border-copper">Command</label>
         <label for="cqrs-p" class="row-start-1 col-start-3 px-5 py-3 text-sm font-medium cursor-pointer border-b border-light-sand dark:border-dark-sand text-warm-gray dark:text-stone peer-checked/p:text-copper peer-checked/p:dark:text-copper-light peer-checked/p:bg-parchment peer-checked/p:dark:bg-deep-parchment peer-checked/p:border-b-2 peer-checked/p:border-copper">Page</label>
 
-        <pre class="hidden peer-checked/q:block row-start-2 col-span-3 m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class Health
+        <pre class="hidden peer-checked/q:block row-start-2 col-span-3 m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code class="language-php">final class Health
 {
     public function __construct(
         public readonly bool $verbose = false,
@@ -306,7 +355,7 @@ final class HealthHandler
     }
 }</code></pre>
 
-        <pre class="hidden peer-checked/c:block row-start-2 col-span-3 m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>final class SubscribeNewsletter
+        <pre class="hidden peer-checked/c:block row-start-2 col-span-3 m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code class="language-php">final class SubscribeNewsletter
 {
     public function __construct(
         #[Email] public readonly string $email,
@@ -325,7 +374,7 @@ final class SubscribeNewsletterHandler
     }
 }</code></pre>
 
-        <pre class="hidden peer-checked/p:block row-start-2 col-span-3 m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code>// app/Pages/About.php
+        <pre class="hidden peer-checked/p:block row-start-2 col-span-3 m-0 p-5 text-[13px] font-code text-ink dark:text-[#e8e4db] overflow-x-auto"><code class="language-php">// app/Pages/About.php
 final class About
 {
     public function __construct(
@@ -347,13 +396,11 @@ final class About
 </div>
 
 <!--
-    Your next 60 seconds / 10 minutes / 1 hour — three progressive
-    commitment cards. Each has a copy-to-clipboard affordance on its
-    primary action.
+    Your next 60 seconds / 10 minutes / 1 hour — action cards with hover lift.
 -->
 <div class="grid md:grid-cols-3 gap-6 mb-12">
 
-    <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
+    <div class="action-card bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
         <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">Next 60 seconds</div>
         <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-3">Make a page</h3>
         <p class="text-warm-gray dark:text-stone text-sm leading-relaxed mb-4 flex-1">
@@ -366,7 +413,7 @@ final class About
         </div>
     </div>
 
-    <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
+    <div class="action-card bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
         <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">Next 10 minutes</div>
         <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-3">Build a Query end-to-end</h3>
         <p class="text-warm-gray dark:text-stone text-sm leading-relaxed mb-4 flex-1">
@@ -380,7 +427,7 @@ final class About
         </div>
     </div>
 
-    <div class="bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
+    <div class="action-card bg-vellum dark:bg-dark-vellum border border-light-sand dark:border-dark-sand rounded-lg p-6 flex flex-col">
         <div class="text-xs uppercase tracking-wider text-copper dark:text-copper-light font-medium mb-2">Next hour</div>
         <h3 class="font-heading text-lg font-semibold text-ink dark:text-[#e8e4db] m-0 mb-3">Read the source</h3>
         <p class="text-warm-gray dark:text-stone text-sm leading-relaxed mb-4 flex-1">
@@ -388,29 +435,52 @@ final class About
             Shodo, Forge, Hourglass — describing the design and the intended use.
             Start where the names are most curious.
         </p>
-        <a href="https://github.com/arcanum-org/framework" class="bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-3 font-code text-[12px] text-copper dark:text-copper-light no-underline hover:bg-dust dark:hover:bg-dark-linen text-center">
+        <a href="https://github.com/arcanum-org/framework" class="action-card bg-parchment dark:bg-deep-parchment border border-light-sand dark:border-dark-sand rounded p-3 font-code text-[12px] text-copper dark:text-copper-light no-underline hover:bg-dust dark:hover:bg-dark-linen text-center">
             github.com/arcanum-org/framework
         </a>
     </div>
 </div>
 
 <!--
-    Footer crumb — single understated line + ASCII rune in the corner.
-    The render duration is from EnvCheckHelper which reads
-    timeSince('request.received') on the framework Stopwatch.
+    Footer crumb — render duration + ornamental asterism.
 -->
 <div class="border-t border-light-sand dark:border-dark-sand pt-6 flex items-center justify-between text-xs text-stone dark:text-warm-gray font-mono">
     <div>
         This page rendered in {{ Env::renderDurationMs() ?? '?' }}ms.
         You are request #{{ Env::requestCount() }} since boot.
     </div>
-    <div class="text-copper dark:text-copper-light text-2xl leading-none" aria-hidden="true">⁂</div>
+    <div class="text-[#9c5a3a] dark:text-copper-light text-2xl leading-none ornament" aria-hidden="true">
+        <svg viewBox="0 0 758 664" class="w-5 h-5 inline-block opacity-40">
+            <path d="M755.738,663.193c-129.533,0.145 -257.284,0.009 -385.034,0.359c-12.827,0.035 -20.846,-2.429 -27.951,-15.079c-35.863,-63.846 -73.206,-126.861 -111.328,-192.4c-20.702,36.356 -40.542,71.198 -62.768,110.231c23.943,0 45.009,1.404 65.786,-0.445c16.583,-1.475 25.254,5.209 32.475,18.824c13.498,25.452 28.128,50.303 43.2,77.022l-310.117,0c76.728,-134.946 151.986,-267.306 229.542,-403.71c51.262,88.577 100.454,173.577 151.704,262.134c50.181,-88.12 98.541,-173.043 148.959,-261.579c21.61,36.737 41.629,70.212 61.112,103.996c55.269,95.837 110.369,191.771 165.246,287.832c1.898,3.322 0.707,8.408 -0.826,12.814m-200.176,-162.74c-8.091,-13.756 -16.182,-27.512 -25.478,-43.318c-21.453,37.513 -41.006,71.704 -62.045,108.494l124.875,0c-12.601,-22.313 -24.028,-42.547 -37.352,-65.176Z" class="fill-[#9c5a3a] dark:fill-[#c8795a]" />
+            <path d="M342.923,262.53c-11.4,19.562 -21.988,37.812 -34.67,59.668c-19.121,-33.274 -36.602,-63.358 -53.554,-93.737c-1.601,-2.868 -1.214,-8.348 0.49,-11.339c40.63,-71.286 81.567,-142.398 124.505,-217.122c22.562,38.326 42.829,72.562 62.904,106.91c19.855,33.97 39.902,67.841 58.901,102.286c3.36,6.091 5.196,16.474 2.282,21.997c-15.662,29.684 -33.049,58.458 -51.801,90.945c-24.209,-41.479 -47.13,-80.752 -71.863,-123.129c-13.197,22.564 -24.79,42.386 -37.194,63.52Z" class="fill-[#9c5a3a] dark:fill-[#c8795a]" />
+        </svg>
+    </div>
 </div>
 
 <script>
-// Copy-to-clipboard wiring for [data-copy] buttons.
-// Fires the system clipboard write, swaps the button text to "Copied!"
-// for 1.5 seconds, restores. Vanilla JS, no dependencies.
+/* Count-up animation for "What's wired up" numbers.
+   Waits for the fade-in to finish before starting. */
+setTimeout(function () {
+    document.querySelectorAll('[data-count]').forEach(function (el) {
+        var target = parseInt(el.getAttribute('data-count'), 10);
+        if (isNaN(target) || target === 0) { el.textContent = '0'; return; }
+        var duration = 800;
+        var start = performance.now();
+        function tick(now) {
+            var elapsed = now - start;
+            var progress = Math.min(elapsed / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.round(eased * target);
+            if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    });
+}, 450);
+
+/* Syntax highlighting */
+if (typeof hljs !== 'undefined') hljs.highlightAll();
+
+/* Copy-to-clipboard wiring */
 document.querySelectorAll('[data-copy]').forEach(function (btn) {
     btn.addEventListener('click', function () {
         navigator.clipboard.writeText(btn.getAttribute('data-copy'));

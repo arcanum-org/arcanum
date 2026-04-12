@@ -11,6 +11,67 @@
 
     {{! App::cssTags() !}}
 
+    <!-- Syntax highlighting — highlight.js with Arcanum-branded theme -->
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js"></script>
+    <style>
+        /* Arcanum syntax theme — warm tones on parchment */
+        .hljs {
+            background: transparent;
+            color: #3d3a34;
+        }
+        .hljs-keyword,
+        .hljs-built_in,
+        .hljs-type { color: #b5623f; }
+        .hljs-string,
+        .hljs-regexp { color: #4a7c59; }
+        .hljs-comment,
+        .hljs-quote { color: #9c9789; font-style: italic; }
+        .hljs-number,
+        .hljs-literal { color: #b8862e; }
+        .hljs-variable,
+        .hljs-template-variable,
+        .hljs-attr { color: #2c2a25; }
+        .hljs-title,
+        .hljs-title\.class_,
+        .hljs-title\.function_ { color: #4a6fa5; }
+        .hljs-meta,
+        .hljs-meta .hljs-keyword { color: #b8862e; }
+        .hljs-symbol,
+        .hljs-bullet { color: #b5623f; }
+        .hljs-tag { color: #6b675e; }
+        .hljs-name { color: #b5623f; }
+        .hljs-attribute { color: #4a6fa5; }
+        .hljs-selector-class,
+        .hljs-selector-id { color: #b5623f; }
+        .hljs-emphasis { font-style: italic; }
+        .hljs-strong { font-weight: bold; }
+
+        /* Dark mode overrides */
+        .dark .hljs { color: #c4bfb3; }
+        .dark .hljs-keyword,
+        .dark .hljs-built_in,
+        .dark .hljs-type { color: #c8795a; }
+        .dark .hljs-string,
+        .dark .hljs-regexp { color: #6a9c75; }
+        .dark .hljs-comment,
+        .dark .hljs-quote { color: #6b675e; }
+        .dark .hljs-number,
+        .dark .hljs-literal { color: #cfa04a; }
+        .dark .hljs-variable,
+        .dark .hljs-template-variable,
+        .dark .hljs-attr { color: #e8e4db; }
+        .dark .hljs-title,
+        .dark .hljs-title\.class_,
+        .dark .hljs-title\.function_ { color: #6a8fc0; }
+        .dark .hljs-meta,
+        .dark .hljs-meta .hljs-keyword { color: #cfa04a; }
+        .dark .hljs-tag { color: #9c9789; }
+        .dark .hljs-name { color: #c8795a; }
+        .dark .hljs-attribute { color: #6a8fc0; }
+        .dark .hljs-selector-class,
+        .dark .hljs-selector-id { color: #c8795a; }
+    </style>
+
     {{! Htmx::script() !}}
     <meta name="csrf-token" content="{{ Csrf::token() }}">
     {{! Htmx::csrf() !}}
