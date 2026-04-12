@@ -12,7 +12,7 @@
     {{! App::cssTags() !}}
 
     {{! Htmx::script() !}}
-    <meta name="csrf-token" content="{{ Html::csrfToken() }}">
+    <meta name="csrf-token" content="{{ Csrf::token() }}">
     {{! Htmx::csrf() !}}
 
     <!-- Dark mode toggle — persisted to localStorage -->
