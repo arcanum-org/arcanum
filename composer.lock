@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5aa8d0c895189e3796c03bb4204ae20a",
+    "content-hash": "ce97e5e2f47a3b10ed659cc00a124992",
     "packages": [
         {
             "name": "arcanum-org/framework",
-            "version": "dev-main",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/arcanum-org/framework.git",
+                "reference": "5e1699dfbac972685599cfaea015ff2356503d63"
+            },
             "dist": {
-                "type": "path",
-                "url": "../../arcanum-org/framework",
-                "reference": "d5f560cea78786dd37054b39981ab591d19a64cd"
+                "type": "zip",
+                "url": "https://api.github.com/repos/arcanum-org/framework/zipball/5e1699dfbac972685599cfaea015ff2356503d63",
+                "reference": "5e1699dfbac972685599cfaea015ff2356503d63",
+                "shasum": ""
             },
             "require": {
                 "monolog/monolog": "^3.4",
@@ -36,42 +42,17 @@
                 "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Arcanum\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Arcanum\\Test\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "bash contrib/setup"
-                ],
-                "check": [
-                    "@cs-fix",
-                    "@cs-check",
-                    "@phpstan",
-                    "@phpunit"
-                ],
-                "cs-check": [
-                    "bash contrib/cs-check"
-                ],
-                "cs-fix": [
-                    "phpcbf --colors --standard=./contrib/phpcs-ruleset.xml --ignore=.coverage,.phpunit.cache"
-                ],
-                "phpstan": [
-                    "bash contrib/phpstan"
-                ],
-                "phpunit": [
-                    "phpunit --colors=always --log-junit=tests/.coverage/junit.xml --configuration=contrib/phpunit.xml --display-warnings"
-                ],
-                "metrics": [
-                    "phpmetrics --report-html=.metrics --junit=tests/.coverage/junit.xml --git=/usr/bin/git ./src"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -79,13 +60,18 @@
                 {
                     "name": "Stephen Young",
                     "email": "young.steveo@gmail.com"
+                },
+                {
+                    "name": "Claude (Anthropic)",
+                    "homepage": "https://claude.ai"
                 }
             ],
             "description": "A robust CQRS framework for building powerful applications.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/arcanum-org/framework/issues",
+                "source": "https://github.com/arcanum-org/framework/tree/v0.1.0"
+            },
+            "time": "2026-04-13T01:54:37+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -4615,9 +4601,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "arcanum-org/framework": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

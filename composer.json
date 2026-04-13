@@ -19,18 +19,9 @@
             "App\\Test\\": "tests/"
         }
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../../arcanum-org/framework",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "require": {
         "php": ">=8.4",
-        "arcanum-org/framework": "@dev"
+        "arcanum-org/framework": "^0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^13.0",
